@@ -60,20 +60,10 @@ module.exports = {
                     {text: '6 指针分析-引入', link: '/06-pta-intro/'},
                     {text: '7 指针分析-基础', link: '/07-pta-fd/'},
                     {text: '8 指针分析-上下文敏感', link: '/08-pta-cs/'},
+                    {text: '9 静态分析与安全', link: '/09-security/'},
                 ]
             },
             { text: '个人博客', link: 'https://blog.cuijiacai.com' },
-            // { text: 'Demo', link: '/demo/' },
-            // { text: 'lalala', link: '/lalala/' },
-            // { text: 'External', link: 'https://google.com' },
-            // {
-            //     text: 'Languages',
-            //     ariaLabel: 'Language Menu',
-            //     items: [
-            //       { text: 'Chinese', link: '/language/chinese/' },
-            //       { text: 'Japanese', link: '/language/japanese/' }
-            //     ]
-            // }
         ],
         repo: 'JacyCui/static-analysis', // 文档项目的github仓库
 
@@ -82,6 +72,7 @@ module.exports = {
         activeHeaderLinks: false, // 活动的标题链接
         sidebarDepth: 3, // 
         sidebar: [
+            '/prerequisites/',
             '/01-intro/',
             '/02-ir/',
             '/03-dfa-ap/',
@@ -89,7 +80,8 @@ module.exports = {
             '/05-inter/',
             '/06-pta-intro/',
             '/07-pta-fd/',
-            '/08-pta-cs/'
+            '/08-pta-cs/',
+            '/09-security/'
             // ['/demo', 'Explicit link text'], // 显示地指定文字
         ],
 

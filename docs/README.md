@@ -4,7 +4,7 @@ heroImage: /static-analysis.png # 主页大图
 heroText: 静态分析 # 主页标题
 tagline: 基于南京大学软件分析课程的静态分析基础教程 # 主页副标题
 actionText: 开始学习 → # 主页按钮文字
-actionLink: /01-intro/ # 主页按钮链接
+actionLink: /prerequisites/ # 主页按钮链接
 # navbar: true # 启用导航栏
 features: # 特点介绍
 - title: 内容全面
