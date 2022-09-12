@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@maginapp/vuepress-plugin-katex": "^1.0.11",
+    "@vuepress/plugin-back-to-top": "^1.9.7",
     "vuepress": "^1.9.7",
     "vuepress-plugin-container": "^2.1.5"
   },

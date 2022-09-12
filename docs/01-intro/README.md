@@ -1,4 +1,4 @@
-# 1 引论
+# 1 静态分析概述
 
 ## 1.1 静态分析的基本概念
 
@@ -70,7 +70,7 @@ $$
 
 -  贪婪的静态分析保证了完整性，妥协了正确性，会饱和估计（Overapproximate）程序的行为，因此会出现假积极（False Positive）的现象，即判定为积极，但实际是消极的。反映在现实场景中即为误报问题。
 
-![false-positive](./false-positive.jpg)
+<p style="text-align:center"><img src="./false-positive.jpg" alt="false-positive" style="zoom:50%;" /></p>
 
 > 在继续推进之前，我们先解释一下积极和消极的含义，对于客观世界来说， $T$ 是积极的， $\overline T$ 是消极的，从S的视角来看， $A$ 是积极的， $\overline A$ 是消极的。
 > 
@@ -90,7 +90,7 @@ $$
 
 - 懒惰的静态分析保证了正确性，妥协了完整性，会保守估计（Underapproximate）程序的行为，因此会出现假消极（False Negative）现象，即判定为消极（在 $\overline A$ 中），但实际是积极（在 $T$ 中）。反映在现实场景中即为漏报问题。
 
-![false-negative](./false-negative.jpg)
+<p style="text-align:center"><img src="./false-negative.jpg" alt="false-negative" style="zoom:50%;" /></p>
 
 和定义1.5类似，我们可以形式化的定义出False Negative：
 

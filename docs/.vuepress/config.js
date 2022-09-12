@@ -1,6 +1,6 @@
 module.exports = {
-    title: 'Hello VuePress', // 网站标题
-    description: 'Just playing around', // 网站描述
+    title: '静态分析', // 网站标题
+    description: '基于南京大学软件分析课程的静态分析基础教程', // 网站描述
 
     // 插件
     plugins: [
@@ -25,6 +25,8 @@ module.exports = {
             before: info => `<div class="conclusion"><p class="title">${info}</p>`,
             after: '</div>',
         }],
+
+        ['@vuepress/back-to-top']
     ],
     
     markdown: { // markdown渲染设置
@@ -45,10 +47,11 @@ module.exports = {
             {
                 text: '目录',
                 items: [
-                    {text: '1 引论', link: '/01-intro/'}
+                    {text: '1 静态分析概述', link: '/01-intro/'},
+                    {text: '2 程序的中间表示', link: '/02-ir/'}
                 ]
-            }
-            // { text: '主页', link: '/' },
+            },
+            { text: '个人博客', link: 'https://blog.cuijiacai.com' },
             // { text: 'Demo', link: '/demo/' },
             // { text: 'lalala', link: '/lalala/' },
             // { text: 'External', link: 'https://google.com' },
@@ -61,7 +64,7 @@ module.exports = {
             //     ]
             // }
         ],
-        repo: 'vuejs/vuepress', // 文档项目的github仓库
+        repo: 'JacyCui/static-analysis', // 文档项目的github仓库
 
         // 关于侧边栏
         displayAllHeaders: false, // 显示所有页面的标题链接，否则只显示当前页面的
@@ -69,6 +72,7 @@ module.exports = {
         sidebarDepth: 2, // 
         sidebar: [
             '/01-intro/',
+            '/02-ir/'
             // ['/demo', 'Explicit link text'], // 显示地指定文字
         ],
 
@@ -78,11 +82,10 @@ module.exports = {
         lastUpdated: '最后更新', // string | boolean 最后更新时间
         repoLabel: '查看源码',
         // docsRepo: 'vuejs/vuepress', // 文档仓库，默认为项目仓库
-        // docsDir: 'docs', // 文档目录
-        // docsBranch: 'master', // 文档分支
+        docsDir: 'docs', // 文档目录
+        docsBranch: 'main', // 文档分支
         editLinks: true,
-        // editLinkText: '帮助我们改善此页面！'
-
+        editLinkText: '帮助我改善此页面！',
 
         smoothScroll: true, // 页面滚动 
     }
