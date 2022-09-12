@@ -61,6 +61,7 @@ module.exports = {
                     {text: '7 指针分析-基础', link: '/07-pta-fd/'},
                     {text: '8 指针分析-上下文敏感', link: '/08-pta-cs/'},
                     {text: '9 静态分析与安全', link: '/09-security/'},
+                    {text: '10 基于Datalog的程序分析', link: '/10-datalog/'},
                 ]
             },
             { text: '个人博客', link: 'https://blog.cuijiacai.com' },
@@ -81,7 +82,8 @@ module.exports = {
             '/06-pta-intro/',
             '/07-pta-fd/',
             '/08-pta-cs/',
-            '/09-security/'
+            '/09-security/',
+            '/10-datalog/',
             // ['/demo', 'Explicit link text'], // 显示地指定文字
         ],
 
