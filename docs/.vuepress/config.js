@@ -57,7 +57,8 @@ module.exports = {
                     {text: '3 数据流分析-应用', link: '/03-dfa-ap/'},
                     {text: '4 数据流分析-基础', link: '/04-dfa-fd/'},
                     {text: '5 过程间分析', link: '/05-inter/'},
-                    {text: '6 指针分析-引入', link: '/06-pta-intro/'}
+                    {text: '6 指针分析-引入', link: '/06-pta-intro/'},
+                    {text: '7 指针分析-基础', link: '/07-pta-fd/'},
                 ]
             },
             { text: '个人博客', link: 'https://blog.cuijiacai.com' },
@@ -85,7 +86,8 @@ module.exports = {
             '/03-dfa-ap/',
             '/04-dfa-fd/',
             '/05-inter/',
-            '/06-pta-intro/'
+            '/06-pta-intro/',
+            '/07-pta-fd/'
             // ['/demo', 'Explicit link text'], // 显示地指定文字
         ],
 

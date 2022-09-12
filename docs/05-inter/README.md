@@ -107,9 +107,9 @@ $$
 
 在运行时刻，一个虚调用会基于接受对象的类型以及调用点处的方法签名来解析调用关系，决定具体调用哪个实例方法，解析过程见算法5.1。
 
-::: tip 算法5.1 虚调用的方法派发算法
+**算法5.1** 虚调用的方法派发算法
 
-<p style="text-align:center"><img src="./md-vc.png" alt="md-vc" style="zoom:40%;"/></p>
+![md-vc](./md-vc.png)
 
 <!--
     \begin{algorithm}
@@ -128,7 +128,6 @@ $$
     \end{algorithmic}
     \end{algorithm}
 -->
-:::
 
 方法派发的过程简单理解就是从接受对象所在的类开始，按照从子类向到基类的顺序查找，直到找到一个方法名和描述符都相同的非抽象方法为止。
 
@@ -175,7 +174,7 @@ void dispatch() {
 - CHA假设声明类型为 `A` 的接收变量 `a` 可能会指向 `A` 类以及 `A` 的所有 **子类（Subclass）** 的对象。
 :::
 
-::: tip 算法5.2 CHA的调用解析（Call Resolution）算法
+**算法5.2** CHA的调用解析（Call Resolution）算法
 
 ![resolve-cha](./resolve-cha.png)
 
@@ -206,8 +205,6 @@ void dispatch() {
     \end{algorithmic}
     \end{algorithm}
 -->
-
-:::
 
 > 需要注意的是，当我们说 $c$ 的子类的时候，包括 $c$ 的直接子类和间接子类。
 
@@ -284,7 +281,7 @@ CHA的常见应用是在IDE中帮助程序员查看调用点处可能的目标�
 - 对于每个可达的方法 $m$ ，通过CHA解析 $m$ 中的每个调用点$cs$的目标方法，即 $Resolve(cs)$ ；
 - 重复上述过程，直到没有发现新的方法为止。
 
-::: tip 算法5.3  调用图构建（Call Graph Construction）算法
+**算法5.3**  调用图构建（Call Graph Construction）算法
 
 ![cgc-alg.png](./cgc-alg.png)
 
@@ -316,8 +313,6 @@ CHA的常见应用是在IDE中帮助程序员查看调用点处可能的目标�
     \end{algorithmic}
     \end{algorithm}
 -->
-
-:::
 
 我们可以通过下面的例子来直观的感受一下算法的运行过程。
 

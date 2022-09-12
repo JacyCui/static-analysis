@@ -2,7 +2,7 @@
 
 ## 4.1 重新审视迭代算法
 
-::: tip 算法4.1 可能性（May Analysis）正向（Forward Analysis）数据流分析的迭代算法
+**算法4.1** 可能性（May Analysis）正向（Forward Analysis）数据流分析的迭代算法
 
 ![mfa-alg-iter](./mfa-alg-iter.png)
 
@@ -26,9 +26,6 @@
     \end{algorithmic}
     \end{algorithm}
 -->
-
-:::
-
 
 其他类型的数据流分析也有类似的迭代算法，我们后续以算法4.1为例进行理论的分析和讲解。迭代算法是一个具有通用性的数据流分析算法，能够提供一种数据流分析的解决方案（解决方案的含义见结论3.2）。
 
@@ -434,9 +431,7 @@ $$F(X) \wedge F(Y) = \{(a, NAC), (b, NAC), (c, 10)\}$$
 
 ## 4.7 工作表算法
 
-::: tip 算法4.2
-
-可能性（May Analysis）正向（Forward Analysis）数据流分析的**工作表算法（Worklist Algorithm）**
+**算法4.2** 可能性（May Analysis）正向（Forward Analysis）数据流分析的 **工作表算法（Worklist Algorithm）**
 
 ![mfa-alg-wl](./mfa-alg-wl.png)
 
