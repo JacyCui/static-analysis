@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "@maginapp/vuepress-plugin-katex": "^1.0.11",
+    "vuepress": "^1.9.7",
+    "vuepress-plugin-container": "^2.1.5"
+  },
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs",
+    "clean": "rm -rf docs/.vuepress/dist"
+  }
+}
