@@ -59,6 +59,7 @@ module.exports = {
                     {text: '5 过程间分析', link: '/05-inter/'},
                     {text: '6 指针分析-引入', link: '/06-pta-intro/'},
                     {text: '7 指针分析-基础', link: '/07-pta-fd/'},
+                    {text: '8 指针分析-上下文敏感', link: '/08-pta-cs/'},
                 ]
             },
             { text: '个人博客', link: 'https://blog.cuijiacai.com' },
@@ -87,7 +88,8 @@ module.exports = {
             '/04-dfa-fd/',
             '/05-inter/',
             '/06-pta-intro/',
-            '/07-pta-fd/'
+            '/07-pta-fd/',
+            '/08-pta-cs/'
             // ['/demo', 'Explicit link text'], // 显示地指定文字
         ],
 
