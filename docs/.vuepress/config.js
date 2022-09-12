@@ -56,7 +56,8 @@ module.exports = {
                     {text: '2 程序的中间表示', link: '/02-ir/'},
                     {text: '3 数据流分析-应用', link: '/03-dfa-ap/'},
                     {text: '4 数据流分析-基础', link: '/04-dfa-fd/'},
-                    {text: '5 过程间分析', link: '/05-inter/'}
+                    {text: '5 过程间分析', link: '/05-inter/'},
+                    {text: '6 指针分析-引入', link: '/06-pta-intro/'}
                 ]
             },
             { text: '个人博客', link: 'https://blog.cuijiacai.com' },
@@ -83,7 +84,8 @@ module.exports = {
             '/02-ir/',
             '/03-dfa-ap/',
             '/04-dfa-fd/',
-            '/05-inter/'
+            '/05-inter/',
+            '/06-pta-intro/'
             // ['/demo', 'Explicit link text'], // 显示地指定文字
         ],
 
