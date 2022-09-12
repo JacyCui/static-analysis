@@ -53,7 +53,10 @@ module.exports = {
                 text: '目录',
                 items: [
                     {text: '1 静态分析概述', link: '/01-intro/'},
-                    {text: '2 程序的中间表示', link: '/02-ir/'}
+                    {text: '2 程序的中间表示', link: '/02-ir/'},
+                    {text: '3 数据流分析-应用', link: '/03-dfa-ap/'},
+                    {text: '4 数据流分析-基础', link: '/04-dfa-fd/'},
+                    {text: '5 过程间分析', link: '/05-inter/'}
                 ]
             },
             { text: '个人博客', link: 'https://blog.cuijiacai.com' },
@@ -78,7 +81,9 @@ module.exports = {
         sidebar: [
             '/01-intro/',
             '/02-ir/',
-            '/03-dfa-ap/'
+            '/03-dfa-ap/',
+            '/04-dfa-fd/',
+            '/05-inter/'
             // ['/demo', 'Explicit link text'], // 显示地指定文字
         ],
 
