@@ -41,9 +41,9 @@ module.exports = {
             // Gitalk配置
             gitalk: {
                 // GitHub Application Client ID.
-                clientID: '447d4e6b80baf28d391a',
+                clientID: 'd82b318c0c7bcc30fc72',
                 // GitHub Application Client Secret.
-                clientSecret: '3c36f30454169fb2f30075a166a6f385faeec1ad',
+                clientSecret: 'c1d713026e3dc925bf0afa184fc2339ce730c3ca',
                 // GitHub repository. 存储评论的 repo
                 repo: 'static-analysis',
                 // GitHub repository 所有者，可以是个人或者组织。
