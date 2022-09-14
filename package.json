@@ -9,5 +9,8 @@
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
     "clean": "rm -rf docs/.vuepress/dist"
+  },
+  "dependencies": {
+    "vuepress-plugin-mygitalk": "^1.0.5"
   }
 }

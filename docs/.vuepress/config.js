@@ -31,7 +31,27 @@ module.exports = {
             after: '</div>',
         }],
 
-        ['@vuepress/back-to-top']
+        ['@vuepress/back-to-top'],
+
+        ['vuepress-plugin-mygitalk', {
+            // 是否启用(关闭请设置为false)(default: true)
+            enable: true,
+            // 是否开启首页评论(default: true)
+            home: false,
+            // Gitalk配置
+            gitalk: {
+                // GitHub Application Client ID.
+                clientID: '447d4e6b80baf28d391a',
+                // GitHub Application Client Secret.
+                clientSecret: '3c36f30454169fb2f30075a166a6f385faeec1ad',
+                // GitHub repository. 存储评论的 repo
+                repo: 'static-analysis',
+                // GitHub repository 所有者，可以是个人或者组织。
+                owner: 'JacyCui',
+                // 设置语言(default: zh-CN)
+                language: 'zh-CN',
+            }
+        }]
     ],
     
     markdown: { // markdown渲染设置
@@ -76,7 +96,7 @@ module.exports = {
         activeHeaderLinks: false, // 活动的标题链接
         sidebarDepth: 3, // 
         sidebar: [
-            '/prerequisites/',
+            '/preface/',
             '/01-intro/',
             '/02-ir/',
             '/03-dfa-ap/',
