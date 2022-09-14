@@ -224,7 +224,8 @@ $$
 
 ### 4.2.4 分配律
 
-::: theorem 定理4.8 purple %}：定义在格 $(L, \preceq)$ 上的单调函数 $f(x)$ 满足： $f(x) \vee f(y) \preceq f(x \vee y)$ ， $f(x \wedge y) \preceq f(x) \wedge f(y)$ 。
+::: theorem 定理4.8
+定义在格 $(L, \preceq)$ 上的单调函数 $f(x)$ 满足： $f(x) \vee f(y) \preceq f(x \vee y)$ ， $f(x \wedge y) \preceq f(x) \wedge f(y)$ 。
 :::
 
 > 证明：
@@ -305,7 +306,7 @@ $$
 ### 4.5.1 全路汇集的解决方案
 
 ::: definition 定义4.13
-考虑从程序入口到沿着某条控制流某个程序点$s_i$处所经过的所有语句，记为 $P = ENTRY \to s_1 \to s_2 \to ... \to s_i$ ，称序列 $s_1s_2...s_i$ 是到程序点 $(s_i, s_{i + 1})$ （见定义3.4）的一条 **路径（Path）** 。
+考虑从程序入口到沿着某条控制流某个程序点$s_i$处所经过的所有语句，记为 $P = ENTRY \to s_1 \to s_2 \to ... \to s_i$ ，称序列 $s_1s_2...s_i$ 是到程序点 $(s_i, s_{i + 1})$ （见定义3.4）的一条 **路径（Path）**。
 :::
 
 ::: theorem 定理4.10
@@ -318,21 +319,21 @@ $$
 :::
 
 ::: definition 定义4.14
-数据流分析的**全路汇集的解决方案（Meet-Over-All-Paths）**通过如下步骤计算某个程序点 $(s_i, s_{i+1})$ 处的数据流值，记为 $MOP[s_i]$ :
+数据流分析的 **全路汇集（Meet-Over-All-Paths）** 的解决方案通过如下步骤计算某个程序点 $(s_i, s_{i+1})$ 处的数据流值，记为 $MOP[s_i]$ :
 
-- 考虑从程序入口到 $s_i$ 处的路径 $P$ 的状态转移方程 $F_P$ ；
+- 考虑从程序入口到 $s_i$ 处的路径 $P$ 的状态转移方程 $F_P$，所有路径的集合记为 $Paths(ENTRY, s_i)$ ；
 - 使用联合或者汇集操作来求这些值的最小上界或者最大下界。
 
 形式化表示为：
 
 $$
-MOP[s_i] = \bigvee_{\forall path\quad P\quad from\quad ENTRY\quad to\quad s_i} F_P(OUT[ENTRY])
+MOP[s_i] = \bigvee_{\forall P \in Paths(ENTRY, s_i)} F_P(OUT[ENTRY])
 $$
 
 或
 
 $$
-MOP[s_i] = \bigwedge_{\forall path\quad P\quad from\quad ENTRY\quad to\quad s_i} F_P(OUT[ENTRY])
+MOP[s_i] = \bigwedge_{\forall P \in Paths(ENTRY, s_i)} F_P(OUT[ENTRY])
 $$
 
 :::
@@ -458,8 +459,6 @@ $$F(X) \wedge F(Y) = \{(a, NAC), (b, NAC), (c, 10)\}$$
     \end{algorithmic}
     \end{algorithm}
 -->
-
-:::
 
 工作表算法是对迭代算法的优化，用一个集合储存下一次遍历会发生变化的基块，这样，已经达到不动点的基块就可以不用重复遍历了。这里需要提一下的是 $Worklist$ 最好采用去重的集合实现，不然的话， $Worklist$ 中可能有重复的基块。
 

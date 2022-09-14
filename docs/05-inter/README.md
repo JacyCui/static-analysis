@@ -93,10 +93,6 @@ class C {
 :::
 
 ::: definition 定义5.6
-我们将表示过程间控制流的边称为 **过程间的控制流边（Interprocedural Control-flow Edge）** ，也就是 **调用边（Call Edge）** 和 **返回边（Return Edge）** 。
-:::
-
-::: definition 定义5.7
 对于某个形如 `o.foo()` 的调用点，记接收对象的类型为 $c$ ，方法签名为 $m$ ，定义在运行时刻解析调用点所调用的目标方法的过程为**方法派发（Method Dispatch）**，记为
 
 $$
@@ -167,7 +163,7 @@ void dispatch() {
 
 #### 解析算法
 
-::: definition 定义5.8
+::: definition 定义5.7
 通过查找类的层级结构来解析目标方法的过程，称之为**类层级结构分析（Class Hierarchy Analysis，CHA）**。其解析算法见算法5.2。CHA满足如下的一些描述：
 - CHA需要知道整个程序的类之间的继承关系，也就是层级结构；
 - CHA会根据调用点处的**接收变量（Receiver Variable）** 的 **声明类型（Declare Type）** 来解析虚调用；
@@ -358,7 +354,7 @@ class C extends A {
 
 CFG代表了一个独立方法的控制流结构，类似的，我们可以用ICFG（Interprocedural Control Flow Graph）来代表整个程序的控制流结构。有了ICFG，我们就可以用分析CFG的方式来分析整个程序。
 
-::: definition 定义5.9
+::: definition 定义5.8
 定义一个程序的 **过程间控制流图（Interprocedural Control Flow Graph，ICFG）** 由两个部分组成：
 
 - 程序中所有方法的控制流图，其中的边称为**CFG边（CFG Edge）**；
@@ -397,7 +393,7 @@ static int ten() {
 
 > 虽然进入方法体多走几步也是可以的，但这会降低效率。
 
-::: definition 定义5.10
+::: definition 定义5.9
 CFG边中从调用点到对应返回点的边称为**调用-返回边（Call-to-return edges）**，除此之外的边称为**普通边（Normal Edges）**。
 :::
 
@@ -409,24 +405,24 @@ CFG边中从调用点到对应返回点的边称为**调用-返回边（Call-to-
 
 ### 5.4.1 过程间与过程内数据流分析的区别
 
-::: definition 定义5.11
+::: definition 定义5.10
 我们将基于CFG分析单个方法内部的数据流分析称为 **过程内数据流分析（Intraprocedural Data-Flow Analysis）** ，将基于ICFG分析整个程序的数据流分析称为 **过程间数据流分析（Interprocedural Data-Flow Analysis）** 。
 :::
 
-::: definition 定义5.12
+::: definition 定义5.11
 
 定义数据流沿着ICFG中的边转移的过程为**边转移（Edge Transfer）**，包括：
 
 - **普通边转移（Normal Edge Transfer）**：数据流沿着某个方法的CFG中的边的转移函数；
 - **调用-返回边转移（Call-Return Edge Transfer）**：数据流从调用点沿着调用-返回边到返回点的转移函数；
 - **调用边转移（Call Edge Transfer）**：数据流从调用点（见定义5.3）沿着调用边转移到被调用者的入口结点的转移函数；
-- **返回边转移（Return Edge Transfer）**：数据流从被调用者的出口结点沿着返回边转移到返回点（见定义5.9）的转移函数。
+- **返回边转移（Return Edge Transfer）**：数据流从被调用者的出口结点沿着返回边转移到返回点（见定义5.8）的转移函数。
 :::
 
 > 这里转移函数可视为边的状态转移方程（见定义3.7）。
 
-::: definition 定义5.13
-称CFG中结点所对应的状态转移方程（见定义3.7）为**结点转移（Node Transfer），**包括：
+::: definition 定义5.12
+称CFG中结点所对应的状态转移方程（见定义3.7）为 **结点转移（Node Transfer），** 包括：
 
 - **调用结点转移（Call Node Transfer）**：调用点对应的结点的状态转移方程；
 - **其他结点转移（Other Node Transfer）**：调用点以外的其他结点的状态转移方程。

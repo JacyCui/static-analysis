@@ -6,7 +6,7 @@
     "vuepress-plugin-container": "^2.1.5"
   },
   "scripts": {
-    "docs:dev": "vuepress dev docs --no-cache",
+    "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
     "clean": "rm -rf docs/.vuepress/dist"
   }
