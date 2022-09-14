@@ -39,7 +39,7 @@ module.exports = {
     },
     locales: {  // 网站语言设置
         '/': {
-            lang: 'zh-CN',
+            lang: 'zh-CN'
             // title: 'VuePress',
             // description: 'Vue-powered Static Site Generator'
         }
@@ -63,9 +63,11 @@ module.exports = {
                     {text: '9 静态分析与安全', link: '/09-security/'},
                     {text: '10 基于Datalog的程序分析', link: '/10-datalog/'},
                     {text: '11 CFL可达与IFDS', link: '/11-ifds/'},
+                    {text: '12 完整性与近似完整性', link: '/12-soundiness/'}
                 ]
             },
-            { text: '个人博客', link: 'https://blog.cuijiacai.com' },
+            { text: '笔者博客', link: 'https://blog.cuijiacai.com' },
+            { text: '配套实验', link: 'https://tai-e.pascal-lab.net/'}
         ],
         repo: 'JacyCui/static-analysis', // 文档项目的github仓库
 
@@ -86,6 +88,7 @@ module.exports = {
             '/09-security/',
             '/10-datalog/',
             '/11-ifds/',
+            '/12-soundiness/'
             // ['/demo', 'Explicit link text'], // 显示地指定文字
         ],
 
@@ -100,7 +103,7 @@ module.exports = {
         editLinks: true,
         editLinkText: '帮助我改善此页面！',
 
-        smoothScroll: true, // 页面滚动 
+        smoothScroll: true // 页面滚动 
     }
 }
 
