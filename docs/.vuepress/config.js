@@ -72,18 +72,38 @@ module.exports = {
             {
                 text: '目录',
                 items: [
-                    {text: '1 静态分析概述', link: '/01-intro/'},
-                    {text: '2 程序的中间表示', link: '/02-ir/'},
-                    {text: '3 数据流分析-应用', link: '/03-dfa-ap/'},
-                    {text: '4 数据流分析-基础', link: '/04-dfa-fd/'},
-                    {text: '5 过程间分析', link: '/05-inter/'},
-                    {text: '6 指针分析-引入', link: '/06-pta-intro/'},
-                    {text: '7 指针分析-基础', link: '/07-pta-fd/'},
-                    {text: '8 指针分析-上下文敏感', link: '/08-pta-cs/'},
-                    {text: '9 静态分析与安全', link: '/09-security/'},
-                    {text: '10 基于Datalog的程序分析', link: '/10-datalog/'},
-                    {text: '11 CFL可达与IFDS', link: '/11-ifds/'},
-                    {text: '12 完整性与近似完整性', link: '/12-soundiness/'}
+                    {
+                        text: '第一部分：程序的表示',
+                        items: [
+                            {text: '1 静态分析概述', link: '/01-intro/'},
+                            {text: '2 程序的中间表示', link: '/02-ir/'}
+                        ]
+                    },
+                    {
+                        text: '第二部分：数据流分析',
+                        items: [
+                            {text: '3 数据流分析-应用', link: '/03-dfa-ap/'},
+                            {text: '4 数据流分析-基础', link: '/04-dfa-fd/'},
+                            {text: '5 过程间分析', link: '/05-inter/'}
+                        ]
+                    },
+                    {
+                        text: '第三部分：指针分析',
+                        items: [
+                            {text: '6 指针分析-引入', link: '/06-pta-intro/'},
+                            {text: '7 指针分析-基础', link: '/07-pta-fd/'},
+                            {text: '8 指针分析-上下文敏感', link: '/08-pta-cs/'},
+                            {text: '9 静态分析与安全', link: '/09-security/'},
+                            {text: '10 基于Datalog的程序分析', link: '/10-datalog/'}
+                        ]
+                    },
+                    {
+                        text: '第四部分：技术拓展',
+                        items: [
+                            {text: '11 CFL可达与IFDS', link: '/11-ifds/'},
+                            {text: '12 完整性与近似完整性', link: '/12-soundiness/'}
+                        ]
+                    }                    
                 ]
             },
             { text: '笔者博客', link: 'https://blog.cuijiacai.com' },
@@ -97,18 +117,50 @@ module.exports = {
         sidebarDepth: 3, // 
         sidebar: [
             '/preface/',
-            '/01-intro/',
-            '/02-ir/',
-            '/03-dfa-ap/',
-            '/04-dfa-fd/',
-            '/05-inter/',
-            '/06-pta-intro/',
-            '/07-pta-fd/',
-            '/08-pta-cs/',
-            '/09-security/',
-            '/10-datalog/',
-            '/11-ifds/',
-            '/12-soundiness/'
+            {
+                title: '第一部分：程序的表示',   
+                path: '/01-intro/',
+                collapsable: true,
+                sidebarDepth: 2,
+                children: [
+                    '/01-intro/',
+                    '/02-ir/'
+                ]
+            },
+            {
+                title: '第二部分：数据流分析',   
+                path: '/03-dfa-ap/',
+                collapsable: true,
+                sidebarDepth: 2,
+                children: [
+                    '/03-dfa-ap/',
+                    '/04-dfa-fd/',
+                    '/05-inter/'
+                ]
+            },
+            {
+                title: '第三部分：指针分析',   
+                path: '/06-pta-intro/',
+                collapsable: true,
+                sidebarDepth: 2,
+                children: [
+                    '/06-pta-intro/',
+                    '/07-pta-fd/',
+                    '/08-pta-cs/',
+                    '/09-security/',
+                    '/10-datalog/'
+                ]
+            },
+            {
+                title: '第四部分：技术拓展',   
+                path: '/11-ifds/',
+                collapsable: true,
+                sidebarDepth: 2,
+                children: [
+                    '/11-ifds/',
+                    '/12-soundiness/'
+                ]
+            }
             // ['/demo', 'Explicit link text'], // 显示地指定文字
         ],
 
