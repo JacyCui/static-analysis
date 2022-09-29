@@ -6,3 +6,7 @@
 
 该课程面向高年级本科生和各级研究生。
 
+## 感谢
+
+本教程基于南京大学[《软件分析》](https://tai-e.pascal-lab.net/lectures.html)课程，在此感谢[李樾](https://yuelee.bitbucket.io/)和[谭添](https://silverbullettt.bitbucket.io/)两位老师设计了如此优质的课程并将相关资源公开出来。
+
