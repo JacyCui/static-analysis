@@ -119,8 +119,8 @@ module.exports = {
             '/preface/',
             {
                 title: '第一部分：程序的表示',   
-                path: '/01-intro/',
-                collapsable: true,
+                // path: '/01-intro/',
+                collapsable: false,
                 sidebarDepth: 2,
                 children: [
                     '/01-intro/',
@@ -129,8 +129,8 @@ module.exports = {
             },
             {
                 title: '第二部分：数据流分析',   
-                path: '/03-dfa-ap/',
-                collapsable: true,
+                // path: '/03-dfa-ap/',
+                collapsable: false,
                 sidebarDepth: 2,
                 children: [
                     '/03-dfa-ap/',
@@ -140,8 +140,8 @@ module.exports = {
             },
             {
                 title: '第三部分：指针分析',   
-                path: '/06-pta-intro/',
-                collapsable: true,
+                // path: '/06-pta-intro/',
+                collapsable: false,
                 sidebarDepth: 2,
                 children: [
                     '/06-pta-intro/',
@@ -153,8 +153,8 @@ module.exports = {
             },
             {
                 title: '第四部分：技术拓展',   
-                path: '/11-ifds/',
-                collapsable: true,
+                // path: '/11-ifds/',
+                collapsable: false,
                 sidebarDepth: 2,
                 children: [
                     '/11-ifds/',
