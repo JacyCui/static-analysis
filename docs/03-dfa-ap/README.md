@@ -252,30 +252,11 @@ $$
 
 根据上面的分析，我们可以设计定义可达性问题的求解算法。
 
-**算法3.1** 定义可达性分析算法
+::: algorithm 算法3.1 定义可达性分析算法
 
-![rd-alg](./rd-alg.png)
+<iframe src="/pseudocode/03-dfa-ap/reaching-definition.html" frameborder="no" marginwidth="0" width="100%" height="315px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{Reaching-Definitions}
-    \begin{algorithmic}
-    \INPUT CFG ($kill_B$ and $gen_B$ computed for each basic block $B$)
-    \OUTPUT $IN[B]$ and $OUT[B]$ for each basic block $B$
-    \STATE $OUT[ENTRY] = \empty$
-    \FOR{\textbf{each} basic block $B\in V(CFG) - \{ENTRY\}$}
-        \STATE $OUT[B] = \empty$
-    \ENDFOR
-    \REPEAT
-        \FOR{\textbf{each} basic block $B\in V(CFG) - \{ENTRY\}$}
-            \STATE $IN[B] = \bigcup_{P\in pre(B)} OUT[P]$
-            \STATE $OUT[B] = gen_B\cup (IN[B] - kill_B)$
-        \ENDFOR
-    \UNTIL{}
-    \STATE \textbf{until} no changes to any $OUT[B]$ of basic block $B\in V(CFG) - \{ENTRY\}$ occur
-    \end{algorithmic}
-    \end{algorithm}
--->
+:::
 
 > 上述算法的复杂度和集合的实现方式以及遍历顺序的选择有关，在这里我们不讨论具体的算法实现，而聚焦于算法的设计。
 >  
@@ -395,30 +376,11 @@ $$
 
 通过上面的分析，我们可以设计活跃变量分析的算法如下。
 
-**算法3.2** 活跃变量分析算法
+::: algorithm 算法3.2 活跃变量分析算法
 
-![lv-algorithm.png](./lv-alg.png)
+<iframe src="/pseudocode/03-dfa-ap/live-variables.html" frameborder="no" marginwidth="0" width="100%" height="315px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{Live-Variables-Analysis}
-    \begin{algorithmic}
-    \INPUT CFG ($def_B$ and $use_B$ computed for each basic block $B$)
-    \OUTPUT $IN[B]$ and $OUT[B]$ for each basic block $B$
-    \STATE $IN[EXIT] = \empty$
-    \FOR{\textbf{each} basic block $B\in V(CFG) - \{EXIT\}$}
-        \STATE $IN[B] = \empty$
-    \ENDFOR
-    \REPEAT
-        \FOR{\textbf{each} basic block $B\in V(CFG) - \{EXIT\}$}
-            \STATE $OUT[B] = \bigcup_{S \in suc(B)} IN[S]$
-            \STATE $IN[B] = use_B \cup (OUT[B] - def_B)$
-        \ENDFOR
-    \UNTIL{}
-    \STATE \textbf{until} no changes to any $IN[B]$ of basic block $B\in V(CFG) - \{EXIT\}$ occur
-    \end{algorithmic}
-    \end{algorithm}
--->
+:::
 
 > 上述算法的复杂度和集合的实现方式以及遍历顺序的选择有关，在这里我们不讨论具体的算法实现，而聚焦于算法的设计。
 
@@ -513,30 +475,11 @@ $$
 
 基于上述分析，我们可以设计可用表达式分析算法如下。
 
-**算法3.3** 可用表达式分析算法
+::: algorithm 算法3.3 可用表达式分析算法
 
-![ae-alg](./ae-alg.png)
+<iframe src="/pseudocode/03-dfa-ap/available-expressions.html" frameborder="no" marginwidth="0" width="100%" height="315px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{Available-Expressions-Analysis}
-    \begin{algorithmic}
-    \INPUT CFG ($kill_B$ and $gen_B$ computed for each basic block $B$)
-    \OUTPUT $IN[B]$ and $OUT[B]$ for each basic block $B$
-    \STATE $OUT[ENTRY] = \empty$
-    \FOR{\textbf{each} basic block $B\in V(CFG) - \{ENTRY\}$}
-        \STATE $OUT[B] = U$
-    \ENDFOR
-    \REPEAT
-        \FOR{\textbf{each} basic block $B\in V(CFG) - \{EXIT\}$}
-            \STATE $IN[B] = \bigcap_{P \in pre(B)} OUT[P]$
-            \STATE $OUT[B] = gen_B \cup (IN[B] - kill_B)$
-        \ENDFOR
-    \UNTIL{}
-    \STATE \textbf{until} no changes to any $OUT[B]$ of basic block $B\in V(CFG) - \{ENTRY\}$ occur
-    \end{algorithmic}
-    \end{algorithm}
--->
+:::
 
 > 注： $U$ 和 $I$ 常在集合论中表示全集。
 

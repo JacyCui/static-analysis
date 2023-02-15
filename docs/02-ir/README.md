@@ -209,38 +209,11 @@ $$
 
 基于定理2.1和定理2.2，我们可以设计出一个寻找基块的算法：
 
-**算法2.1** 基于中间表示的基块构建算法
+::: algorithm 算法2.1 基于中间表示的基块构建算法
 
-![build-bb](./build-bb.png)
+<iframe src="/pseudocode/02-ir/build-basic-block.html" frameborder="no" marginwidth="0" width="100%" height="480px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{Build-Basic-Blocks}
-    \begin{algorithmic}
-    \INPUT IR表示下的指令序列 $P[1..n]$.
-    \OUTPUT 所有的基块.
-    \STATE Let $L[1..n]$ be a new array. \COMMENT{$L[1..n]$ 用来存放所有的Leader的下标}
-    \STATE $k := 1$ \COMMENT{$k$ 用来记录Leader的个数}
-    \STATE $L[k] = 1$ \COMMENT{$P[1]$ 是Leader}
-    \FOR{$i = 2$ \TO $n$}
-        \IF{the type of $P[i]$ is jump}
-            \STATE \COMMENT{根据定理2.1寻找Leader}
-            \STATE $L[k+1] = target(P[i])$ \COMMENT{$target(x) \to$ 跳转指令x的目标指令的序号}
-            \STATE $L[k+2] = i + 1$
-            \STATE $k = k + 2$
-        \ENDIF
-    \ENDFOR
-    \STATE \CALL{Sort}{$L[1..k]$} \COMMENT{将所有的Leader从小到大排序, 需要 $O(k\log k)$}
-    \STATE $k =$ \CALL{RemoveDuplicates}{$L[1..k]$}
-    \STATE \COMMENT{将Leader的下标去重, 排序后的去重只需要 $O(n)$ , 返回不重复的Leader个数}
-    \STATE $L[k+1] = n + 1$
-    \STATE \COMMENT{根据定理2.2输出Basic Block}
-    \FOR{$i = 1$ \TO $k$}
-        \STATE \textbf{output} $P[L[i]..L[i+1]-1]$
-    \ENDFOR
-    \end{algorithmic}
-    \end{algorithm}
--->
+:::
 
 算法的时间复杂度为最坏为 $O(n\log n)$ ，当 $k\log k < n$ 时，时间复杂度为 $O(n)$ 。
 
@@ -291,37 +264,11 @@ $$
 
 基于上述定义，我们可以得到构建CFG的算法：
 
-**算法2.2** 基于基块的控制流图构建算法
+::: algorithm 算法2.2 基于基块的控制流图构建算法
 
-![build-cfg](./build-cfg.png)
+<iframe src="/pseudocode/02-ir/build-cfg.html" frameborder="no" marginwidth="0" width="100%" height="460px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{Build-CFG}
-    \begin{algorithmic}
-    \INPUT 基块序列 $B[1..n]$.
-    \OUTPUT 控制流图的所有边(有向边).
-    \FOR{$i = 1$ \TO $k - 1$}
-        \FOR{$j = i + 1$ \TO $k$}
-            \IF{$B[i].last.type =$ JUMP \AND $B[i].last.target = B[j].first$}
-                \STATE \textbf{output} $B[i]\to B[j]$
-            \ELIF{$B[i].last.next = B[j].first$ \AND $B[i].last.type \ne$ UCONDITIONAL-JUMP}
-                \STATE \COMMENT{上面的else是为了保证不出现重边}
-                \STATE \textbf{output} $B[i] \to B[j]$
-            \ENDIF
-            \STATE
-            \STATE \COMMENT{这里注意不能有else, 因为B[i]和B[j]是有可能形成控制流闭环的}
-            \STATE \COMMENT{尽管这样的程序是一个很糟糕的程序, 但糟糕的程序不应当使CFG的构建算法失效}
-            \IF{$B[j].last.type =$ JUMP \AND $B[j].last.target = B[i].first$}
-                \STATE \textbf{output} $B[j]\to B[i]$
-            \ELIF{$B[j].last.next = B[i].first$ \AND $B[j].last.type \ne$ UCONDITIONAL-JUMP}
-                \STATE \textbf{output} $B[j]\to B[i]$
-            \ENDIF
-        \ENDFOR
-    \ENDFOR
-    \end{algorithmic}
-    \end{algorithm}
--->
+:::
 
 这是一个简单的暴力算法，它的时间复杂度为 $O(k^2)$ 。
 

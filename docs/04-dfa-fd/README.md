@@ -2,30 +2,11 @@
 
 ## 4.1 重新审视迭代算法
 
-**算法4.1** 可能性（May Analysis）正向（Forward Analysis）数据流分析的迭代算法
+::: algorithm 算法4.1 可能性（May Analysis）正向（Forward Analysis）数据流分析的迭代（Iterative）算法
 
-![mfa-alg-iter](./mfa-alg-iter.png)
+<iframe src="/pseudocode/04-dfa-fd/may-forward-analysis-iterative.html" frameborder="no" marginwidth="0" width="100%" height="315px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{May-Forward-Analysis-Iterative}
-    \begin{algorithmic}
-    \INPUT CFG ($kill_B$ and $gen_B$ computed for each basic block $B$)
-    \OUTPUT $IN[B]$ and $OUT[B]$ for each basic block $B$
-    \STATE $OUT[ENTRY] = \empty$
-    \FOR{\textbf{each} basic block $B\in V(CFG) - \{ENTRY\}$}
-        \STATE $OUT[B] = \empty$
-    \ENDFOR
-    \REPEAT
-        \FOR{\textbf{each} basic block $B\in V(CFG) - \{ENTRY\}$}
-            \STATE $IN[B] = \bigcup_{P\in pre(B)} OUT[P]$
-            \STATE $OUT[B] = gen_B\cup (IN[B] - kill_B)$
-        \ENDFOR
-    \UNTIL{}
-    \STATE \textbf{until} no changes to any $OUT[B]$ of basic block $B\in V(CFG) - \{ENTRY\}$ occur
-    \end{algorithmic}
-    \end{algorithm}
--->
+:::
 
 其他类型的数据流分析也有类似的迭代算法，我们后续以算法4.1为例进行理论的分析和讲解。迭代算法是一个具有通用性的数据流分析算法，能够提供一种数据流分析的解决方案（解决方案的含义见结论3.2）。
 
@@ -445,33 +426,11 @@ $$F(X) \wedge F(Y) = \{(a, NAC), (b, NAC), (c, 10)\}$$
 
 ## 4.7 工作表算法
 
-**算法4.2** 可能性（May Analysis）正向（Forward Analysis）数据流分析的 **工作表算法（Worklist Algorithm）**
+::: algorithm 算法4.2 可能性（May Analysis）正向（Forward Analysis）数据流分析的工作表（Worklist）算法
 
-![mfa-alg-wl](./mfa-alg-wl.png)
+<iframe src="/pseudocode/04-dfa-fd/may-forward-analysis-worklist.html" frameborder="no" marginwidth="0" width="100%" height="395px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{May-Forward-Analysis-Worklist}
-    \begin{algorithmic}
-    \INPUT CFG ($kill_B$ and $gen_B$ computed for each basic block $B$)
-    \OUTPUT $IN[B]$ and $OUT[B]$ for each basic block $B$
-    \STATE $OUT[ENTRY] = \empty$
-    \FOR{\textbf{each} basic block $B\in V(CFG) - \{ENTRY\}$}
-        \STATE $OUT[B] = \empty$
-    \ENDFOR
-    \STATE Let $Worklist$ be a \textbf{Set} of all basic blocks.
-    \WHILE{$Worklist$ \textbf{is} \NOT empty}
-        \STATE Pick a basic block $B$ from $Worklist$.
-        \STATE $temp = OUT[B]$
-        \STATE $IN[B] = \bigcup_{P\in pre(B)} OUT[P]$
-        \STATE $OUT[B] = gen_B\cup (IN[B] - kill_B)$
-        \IF{$temp \ne OUT[B]$}
-            \STATE Add all successors of $B$ to $Worklist$.
-        \ENDIF
-    \ENDWHILE
-    \end{algorithmic}
-    \end{algorithm}
--->
+::: 
 
 工作表算法是对迭代算法的优化，用一个集合储存下一次遍历会发生变化的基块，这样，已经达到不动点的基块就可以不用重复遍历了。这里需要提一下的是 $Worklist$ 最好采用去重的集合实现，不然的话， $Worklist$ 中可能有重复的基块。
 

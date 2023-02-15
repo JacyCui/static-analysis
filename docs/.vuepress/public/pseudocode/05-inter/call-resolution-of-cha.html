@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!-- Setup KaTeX -->
+    <script src="/pseudocode/katex.js" type="text/javascript"></script>
+    <!-- Pseudocode -->
+    <link rel="stylesheet" href="/pseudocode/pseudocode.css" type="text/css">
+    <script src="/pseudocode/pseudocode.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <pre id="demo" style="display:none;">
+        \begin{algorithm}
+        \caption{Call-Resolution-Of-CHA}
+        \begin{algorithmic}
+        \INPUT Call site $cs$.
+        \OUTPUT Possible target methods of $cs$ resolved by CHA.
+        \PROCEDURE{Resolve}{$cs$}
+            \STATE $T := \{\}$
+            \STATE $m :=$ method signature at $cs$
+            \IF{$cs$ is a static call}
+                \STATE $T = \{m\}$
+            \ENDIF
+            \IF{$cs$ is a special call}
+                \STATE $c^{m} =$ class type of $m$
+                \STATE $T = \{$ \CALL{Dispatch}{$c^m, m$} $\}$
+            \ENDIF
+            \IF{$cs$ is a virtual call}
+                \STATE $c :=$ declared type of receiver variable at $cs$
+                \FOR{\textbf{each} $c'$ that is a subclass of $c$ or $c$ itself}
+                    \STATE add \CALL{Dispatch}{$c', m$} to $T$
+                \ENDFOR
+            \ENDIF
+            \RETURN $T$
+        \ENDPROCEDURE
+        \end{algorithmic}
+        \end{algorithm}
+    </pre>
+    <script>
+        let options = {
+            indentSize: '1.4em',
+            commentDelimiter: ' // ',
+            lineNumber: true,
+            lineNumberPunc: ':',
+            noEnd: false,
+            captionCount: 4.2//,
+            //titlePrefix: "Program"
+        };
+        pseudocode.renderElement(document.getElementById("demo"), options);                                 
+    </script>
+</body>
+</html>

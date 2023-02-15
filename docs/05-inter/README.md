@@ -5,16 +5,16 @@
 ## 5.1 过程间分析的动机
 
 ::: definition 定义5.1
-我们称一个静态分析是 **过程内分析（Intraprocedural Analysis）** ，如果它因为 **安全估计（Safe-approximation）** 的原则，对程序中所有的过程调用作 **最保守的假设（Most Conservative Assumption）** ；如果一个静态分析考虑过程间的控制流，分析过程内的具体变化，我们称其为 **过程间分析（Interprocedural Analysis）** 。
+我们称一个静态分析是 **过程内分析（Intraprocedural Analysis）** ，如果它因为 **安全近似（Safe-approximation）** 的原则，对程序中所有的过程调用作 **最保守的假设（Most Conservative Assumption）** ；如果一个静态分析考虑过程间的控制流，分析被调用过程内的具体变化，我们称其为 **过程间分析（Interprocedural Analysis）** 。
 :::
 
 ::: definition 定义5.2
-我们将表示过程间控制流的边称为**过程间的控制流边（Interprocedural Control-flow Edge）**，也就是**调用边（Call Edge）** 和 **返回边（Return Edge）**。
+我们将表示过程间控制流的边称为**过程间的控制流边（Interprocedural Control-flow Edge）**，包括 **调用边（Call Edge）** 和 **返回边（Return Edge）**。
 :::
 
 到目前为止，我们学习的所有的静态分析都是过程内分析，如果我们用过程内分析的方法来处理方法调用的话，比如说常量传播问题，为了安全估计，我们会保守地假设所有的过程调用的结果为 `NAC` ，这样会导致分析结果极其不精确（Imprecision），虽然安全，但是过于保守，近乎无用。
 
-因此，我们需要过程间分析，通过过程间的控制流边来传递数据流信息。也就是通过调用边和返回边传递信息。为了能够进行过程间的分析，我们需要一种对于过程间调用关系的表示——调用图。
+因此，我们需要过程间分析，通过过程间的控制流边来传递数据流信息，也就是通过调用边和返回边传递信息。为了能够进行过程间的分析，我们需要一种对于过程间调用关系的表示——调用图。
 
 ## 5.2 调用图的构建
 
@@ -44,16 +44,23 @@ void baz(int x) { }
 调用图是非常重要的程序信息，它有很多的应用，比如说：
 
 - 过程间分析的基础
+
 - 程序优化（Optimization）
+
 - 程序理解（Understanting）
+
 - 程序调试（Debugging）
+
 - 程序测试（Testing）
 
 我们后面聚焦于对面向对象编程语言（Object-Oriented Programming Language，OOPL）的调用图构建，以Java为例，常见的方法有：
 
 - 类层级结构分析（Class Hierarchy Analysis，CHA）
+
 - 快速类型分析（Rapid Type Analysis，RTA）
+
 - 变量类型分析（Variable Type Analysis，VTA）
+
 - 指针分析（Pointer Analysis，k-CFA）
 
 上面的四种方法自上而下精度（Precision）越来越高，但是效率（Efficiency）也越来越低。这一章重点讲解类层级结构分析的方法，在后面几章里面会讲解指针分析的方法。
@@ -70,12 +77,12 @@ Java中有如下的三种 **方法调用（Method Call / Invocation）** 类型�
 | **目标方法数量** | 1 | 1 | $\ge 1$（多态-Polymorphism） |
 | **决定时间（Determinacy）** | 编译时 | 编译时 | 运行时 |
 
-其中我们会发现，静态调用和特殊调用的目标方法确定是简单的（Trivial），在编译的时候就可以确定下来，真正对我们构造调用图造成挑战的是虚调用，它有不止一个可能的目标方法，到运行时才能完全确定下来，这也是面向对象编程范式的一个特性——多态。因此，我们构建调用图的关键是处理好虚调用。
+其中我们会发现，静态调用和特殊调用的目标方法确定是平凡的（Trivial），在编译的时候就可以确定下来，真正对我们构造调用图造成挑战的是虚调用，它有不止一个可能的目标方法，到运行时才能完全确定下来，这也是面向对象编程范式的一个特性——多态。因此，我们构建调用图的关键是处理好虚调用。
 
 ### 5.2.3 虚调用的方法派发
 
 ::: definition 定义5.4
-一个方法的 **描述符（Descriptor）** 由这个方法的 **返回类型（Return Type）** 和 **形参类型（Parameter Type）** 。
+一个方法的 **描述符（Descriptor）** 由这个方法的 **返回类型（Return Type）** 和 **形参类型（Parameter Type）** 组成。
 :::
 
 ::: definition 定义5.5
@@ -103,27 +110,11 @@ $$
 
 在运行时刻，一个虚调用会基于接受对象的类型以及调用点处的方法签名来解析调用关系，决定具体调用哪个实例方法，解析过程见算法5.1。
 
-**算法5.1** 虚调用的方法派发算法
+::: algorithm 算法 5.1 虚调用的方法派发算法
 
-![md-vc](./md-vc.png)
+<iframe src="/pseudocode/05-inter/method-dispatch-of-virtual-calls.html" frameborder="no" marginwidth="0" width="100%" height="260px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{Method-Dispatch-Of-Virtual-Calls}
-    \begin{algorithmic}
-    \INPUT Type $c$ of receiver object and method signature $m$ at call site.
-    \OUTPUT The signature of target method.
-    \PROCEDURE{Dispatch}{$c,m$}
-        \IF{$c$ contains non-abstract method $m'$ that has the same name and descriptor as $m$}
-            \RETURN $m'$
-        \ELSE
-            \STATE Let $c'$ be the superclass of $c$.
-            \RETURN \CALL{Dispatch}{$c', m$}
-        \ENDIF
-    \ENDPROCEDURE
-    \end{algorithmic}
-    \end{algorithm}
--->
+:::
 
 方法派发的过程简单理解就是从接受对象所在的类开始，按照从子类向到基类的顺序查找，直到找到一个方法名和描述符都相同的非抽象方法为止。
 
@@ -155,6 +146,7 @@ void dispatch() {
 ```
 
 - 对于调用点 `x.foo()` ，我们有 `Dispatch(B, A.foo()) = A.foo()` ；
+
 - 对于调用点 `y.foo()` ，我们有 `Dispatch(C, A.foo()) = C.foo()` 。
 
 其实，Dispatch算法模拟的是实际运行时的动态绑定过程。但是，在静态分析阶段，大部分情况下我们是无法直接获取接收对象的类型的，因为大多数时候，由于控制流的作用，一个调用点可能有不止一种可能的接受对象类型。
@@ -165,42 +157,19 @@ void dispatch() {
 
 ::: definition 定义5.7
 通过查找类的层级结构来解析目标方法的过程，称之为**类层级结构分析（Class Hierarchy Analysis，CHA）**。其解析算法见算法5.2。CHA满足如下的一些描述：
+
 - CHA需要知道整个程序的类之间的继承关系，也就是层级结构；
+
 - CHA会根据调用点处的**接收变量（Receiver Variable）** 的 **声明类型（Declare Type）** 来解析虚调用；
+
 - CHA假设声明类型为 `A` 的接收变量 `a` 可能会指向 `A` 类以及 `A` 的所有 **子类（Subclass）** 的对象。
 :::
 
-**算法5.2** CHA的调用解析（Call Resolution）算法
+::: algorithm 算法5.2 CHA的调用解析（Call Resolution）算法
 
-![resolve-cha](./resolve-cha.png)
+<iframe src="/pseudocode/05-inter/call-resolution-of-cha.html" frameborder="no" marginwidth="0" width="100%" height="465px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{Call-Resolution-Of-CHA}
-    \begin{algorithmic}
-    \INPUT Call site $cs$.
-    \OUTPUT Possible target methods of $cs$ resolved by CHA.
-    \PROCEDURE{Resolve}{$cs$}
-        \STATE $T := \{\}$
-        \STATE $m :=$ method signature at $cs$
-        \IF{$cs$ is a static call}
-            \STATE $T = \{m\}$
-        \ENDIF
-        \IF{$cs$ is a special call}
-            \STATE $c^{m} =$ class type of $m$
-            \STATE $T = \{$ \CALL{Dispatch}{$c^m, m$} $\}$
-        \ENDIF
-        \IF{$cs$ is a virtual call}
-            \STATE $c :=$ declared type of receiver variable at $cs$
-            \FOR{\textbf{each} $c'$ that is a subclass of $c$ or $c$ itself}
-                \STATE add \CALL{Dispatch}{$c' m$} to $T$
-            \ENDFOR
-        \ENDIF
-        \RETURN $T$
-    \ENDPROCEDURE
-    \end{algorithmic}
-    \end{algorithm}
--->
+::: 
 
 > 需要注意的是，当我们说 $c$ 的子类的时候，包括 $c$ 的直接子类和间接子类。
 
@@ -244,19 +213,25 @@ void resolve() {
 算法会对于每一个接收变量的声明类型本身及其子类关于调用点处的函数签名进行方法派发的操作，将所有找到的目标方法加入结果之中。因此
 
 - `Resolve(c.foo()) = {C.foo()}` ；
+
 - `Resolve(a.foo()) = {A.foo(), C.foo(), D.foo()}` ；
+
 - `Resolve(b.foo()) = {A.foo(), C.foo(), D.foo()}` ；
 
 其中，我们需要注意一下的是第三个调用点， `A.foo()` 也在其结果之内，因为对于 `B` 类本身的方法派发得到的结果是 `A.foo()` 。
 
-并且，CHA的Resolve算法只关心声明类型，因此 `new B()` 其实并没有在算法中发挥作用，从而我们 `Resolve(b.foo())` 产生了两个虚假的目标调用（Spurious） `C.foo()` 和 `D.foo()` 。
+并且，CHA的Resolve算法只关心声明类型，因此 `new B()` 其实并没有在算法中发挥作用，从而我们 `Resolve(b.foo())` 产生了两个虚假（Spurious）的目标调用 `C.foo()` 和 `D.foo()` 。
 
 #### 特点
 
 - 优点：快
+
    - 只考虑了调用点处接收对象的声明类型及其继承结构
+
    - 忽略数据流和控制流信息
+
 - 缺点：不精确
+
    - 很容易引入虚假的目标方法
 
 > 之后的指针分析会处理不精确的问题。
@@ -267,48 +242,23 @@ CHA的常见应用是在IDE中帮助程序员查看调用点处可能的目标�
 
 <p style="text-align:center"><img src="./cha-ap.png" alt="cha-ap" style="zoom:40%;"/></p>
 
-比如说IntelliJ IDEA就是用CHA算法帮助程序员分析目标调用的。
+比如说IntelliJ IDEA就是用 CHA 算法帮助程序员分析目标调用的。
 
 ### 5.2.5 通过CHA构建调用图
 
 通过CHA构建整个程序调用图的基本过程为：
 
 - 从入口方法开始（通常为main方法）；
+
 - 对于每个可达的方法 $m$ ，通过CHA解析 $m$ 中的每个调用点$cs$的目标方法，即 $Resolve(cs)$ ；
+
 - 重复上述过程，直到没有发现新的方法为止。
 
-**算法5.3**  调用图构建（Call Graph Construction）算法
+::: algorithm 算法5.3  调用图构建（Call Graph Construction）算法
 
-![cgc-alg.png](./cgc-alg.png)
+<iframe src="/pseudocode/05-inter/call-graph-construction.html" frameborder="no" marginwidth="0" width="100%" height="480px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{Call-Graph-Construction}
-    \begin{algorithmic}
-    \INPUT Signature of entry methods $m^{entry}$.
-    \OUTPUT Call Graph CG, a set of call edges.
-    \PROCEDURE{BuildCallGraph}{$m^{entry}$}
-        \STATE $WL = [m^{entry}]$ \COMMENT{Work List, containing the methods to be processed}
-        \STATE $CG = \{\}$ \COMMENT{Call Graph, a set of call edges}
-        \STATE $RM = \{\}$ \COMMENT{A set of reachable methods}
-        \WHILE{$WL$ \textbf{is} \NOT empty}
-            \STATE remove $m$ from $WL$ \COMMENT{$m$ is a method signature}
-            \IF{$m \notin RM$}
-                \STATE add $m$ to $RM$
-                \FOR{\textbf{each} call site $cs$ \textbf{in} $m$}
-                    \STATE $T :=$ \CALL{Resolve}{$cs$} \COMMENT{Resolve target methods, probably via CHA}
-                    \FOR{\textbf{each} target method $m'$ \textbf{in} $T$}
-                        \STATE add $cs \to m'$ to $CG$
-                        \STATE add $m'$ to $WL$
-                    \ENDFOR
-                \ENDFOR
-            \ENDIF
-        \ENDWHILE
-        \RETURN $CG$
-    \ENDPROCEDURE
-    \end{algorithmic}
-    \end{algorithm}
--->
+:::
 
 我们可以通过下面的例子来直观的感受一下算法的运行过程。
 
@@ -358,8 +308,11 @@ CFG代表了一个独立方法的控制流结构，类似的，我们可以用IC
 定义一个程序的 **过程间控制流图（Interprocedural Control Flow Graph，ICFG）** 由两个部分组成：
 
 - 程序中所有方法的控制流图，其中的边称为**CFG边（CFG Edge）**；
+
 - 两种额外的边：
+
     - **调用边（Call Edge）**：从调用点（Call Site）到调用点对应的被调用者（Callee）的入口结点（Entry Node）的边；
+
     - **返回边（Return Edge）**：从被调用者的出口结点（Exit Node）到 **返回点（Return Site, 控制流中紧接着调用点的语句）** 的边。
 :::
 
@@ -414,8 +367,11 @@ CFG边中从调用点到对应返回点的边称为**调用-返回边（Call-to-
 定义数据流沿着ICFG中的边转移的过程为**边转移（Edge Transfer）**，包括：
 
 - **普通边转移（Normal Edge Transfer）**：数据流沿着某个方法的CFG中的边的转移函数；
+
 - **调用-返回边转移（Call-Return Edge Transfer）**：数据流从调用点沿着调用-返回边到返回点的转移函数；
+
 - **调用边转移（Call Edge Transfer）**：数据流从调用点（见定义5.3）沿着调用边转移到被调用者的入口结点的转移函数；
+
 - **返回边转移（Return Edge Transfer）**：数据流从被调用者的出口结点沿着返回边转移到返回点（见定义5.8）的转移函数。
 :::
 
@@ -425,6 +381,7 @@ CFG边中从调用点到对应返回点的边称为**调用-返回边（Call-to-
 称CFG中结点所对应的状态转移方程（见定义3.7）为 **结点转移（Node Transfer），** 包括：
 
 - **调用结点转移（Call Node Transfer）**：调用点对应的结点的状态转移方程；
+
 - **其他结点转移（Other Node Transfer）**：调用点以外的其他结点的状态转移方程。
 :::
 
@@ -442,13 +399,21 @@ CFG边中从调用点到对应返回点的边称为**调用-返回边（Call-to-
 #### 转移函数
 
 - 结点转移：
+
    - 调用结点转移：恒等函数（Identity Function，即直接将输入当输出返回的函数）；
+
       - 调用点左值变量留给调用-返回边处理；
+
    - 其他结点转移：和过程内的常量传播一致（见4.6.2）；
+
 - 边转移：
+
    - 普通边：恒等函数
+
    - 调用-返回边：消除调用点的 **左值变量（Left-hand-side Variable, LHS Variable）** 的值，传播其他本地变量的值；
+   
    - 调用边：传递参数值；
+   
    - 返回边：传递返回值。
 
 #### 例子
@@ -472,7 +437,10 @@ CFG边中从调用点到对应返回点的边称为**调用-返回边（Call-to-
 ## 5.5 自检问题
 
 1. 如何通过类层级结构分析（Class Hierarchy Analysis, CHA）来构建调用图（Call Graph）？
+
 2. 如何理解过程间控制流图（Interprocedural Control-Flow Graph, ICFG）的概念？
+
 3. 如何理解过程间数据流分析（Interprocedural Data-Flow Analysis, IDFA）的概念？
+
 4. 如何进行过程间常量传播（Interprocedural Constant Propagation）分析？
 

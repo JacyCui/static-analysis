@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!-- Setup KaTeX -->
+    <script src="/pseudocode/katex.js" type="text/javascript"></script>
+    <!-- Pseudocode -->
+    <link rel="stylesheet" href="/pseudocode/pseudocode.css" type="text/css">
+    <script src="/pseudocode/pseudocode.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <pre id="demo" style="display:none;">
+        \begin{algorithm}
+        \caption{Build-Basic-Blocks}
+        \begin{algorithmic}
+        \INPUT IR 表示下的指令序列 $P[1..n]$.
+        \OUTPUT 所有的基块.
+        \STATE Let $L[1..n]$ be a new array. \COMMENT{$L[1..n]$ 用来存放所有的Leader的下标}
+        \STATE $k := 1$ \COMMENT{$k$ 用来记录Leader的个数}
+        \STATE $L[k] = 1$ \COMMENT{$P[1]$ 是Leader}
+        \FOR{$i = 2$ \TO $n$}
+            \IF{the type of $P[i]$ is jump}
+                \STATE \COMMENT{根据定理2.1寻找Leader}
+                \STATE $L[k+1] = target(P[i])$ \COMMENT{$target(x) \to$ 跳转指令x的目标指令的序号}
+                \STATE $L[k+2] = i + 1$
+                \STATE $k = k + 2$
+            \ENDIF
+        \ENDFOR
+        \STATE \CALL{Sort}{$L[1..k]$} \COMMENT{将所有的Leader从小到大排序, 需要 $O(k\log k)$}
+        \STATE $k =$ \CALL{RemoveDuplicates}{$L[1..k]$}
+        \STATE \COMMENT{将Leader的下标去重, 排序后的去重只需要 $O(n)$ , 返回不重复的Leader个数}
+        \STATE $L[k+1] = n + 1$
+        \STATE \COMMENT{根据定理2.2输出Basic Block}
+        \FOR{$i = 1$ \TO $k$}
+            \STATE \textbf{output} $P[L[i]..L[i+1]-1]$
+        \ENDFOR
+        \end{algorithmic}
+        \end{algorithm}
+    </pre>
+    <script>
+        let options = {
+            indentSize: '1.4em',
+            commentDelimiter: ' // ',
+            lineNumber: true,
+            lineNumberPunc: ':',
+            noEnd: false,
+            captionCount: 1.1//,
+            //titlePrefix: "Program"
+        };
+        pseudocode.renderElement(document.getElementById("demo"), options);                                 
+    </script>
+</body>
+</html>

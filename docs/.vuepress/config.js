@@ -31,6 +31,12 @@ module.exports = {
             after: '</div>',
         }],
 
+        ['vuepress-plugin-container', {
+            type: 'algorithm',
+            before: info => `<div class="algorithm"><p class="title">${info}</p>`,
+            after: '</div>',
+        }],
+
         ['@vuepress/back-to-top'],
 
         ['vuepress-plugin-mygitalk', {

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!-- Setup KaTeX -->
+    <script src="/pseudocode/katex.js" type="text/javascript"></script>
+    <!-- Pseudocode -->
+    <link rel="stylesheet" href="/pseudocode/pseudocode.css" type="text/css">
+    <script src="/pseudocode/pseudocode.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <pre id="demo" style="display:none;">
+        \begin{algorithm}
+        \caption{Build-CFG}
+        \begin{algorithmic}
+        \INPUT 基块序列 $B[1..n]$.
+        \OUTPUT 控制流图的所有边(有向边).
+        \FOR{$i = 1$ \TO $k - 1$}
+            \FOR{$j = i + 1$ \TO $k$}
+                \IF{$B[i].last.type =$ JUMP \AND $B[i].last.target = B[j].first$}
+                    \STATE \textbf{output} $B[i]\to B[j]$
+                \ELIF{$B[i].last.next = B[j].first$ \AND $B[i].last.type \ne$ UCONDITIONAL-JUMP}
+                    \STATE \COMMENT{上面的else是为了保证不出现重边}
+                    \STATE \textbf{output} $B[i] \to B[j]$
+                \ENDIF
+                \STATE
+                \STATE \COMMENT{这里注意不能有else, 因为B[i]和B[j]是有可能形成控制流闭环的}
+                \STATE \COMMENT{尽管这样的程序是一个很糟糕的程序, 但糟糕的程序不应当使CFG的构建算法失效}
+                \IF{$B[j].last.type =$ JUMP \AND $B[j].last.target = B[i].first$}
+                    \STATE \textbf{output} $B[j]\to B[i]$
+                \ELIF{$B[j].last.next = B[i].first$ \AND $B[j].last.type \ne$ UCONDITIONAL-JUMP}
+                    \STATE \textbf{output} $B[j]\to B[i]$
+                \ENDIF
+            \ENDFOR
+        \ENDFOR
+        \end{algorithmic}
+        \end{algorithm}
+    </pre>
+    <script>
+        let options = {
+            indentSize: '1.4em',
+            commentDelimiter: ' // ',
+            lineNumber: true,
+            lineNumberPunc: ':',
+            noEnd: false,
+            captionCount: 1.2//,
+            //titlePrefix: "Program"
+        };
+        pseudocode.renderElement(document.getElementById("demo"), options);                                 
+    </script>
+</body>
+</html>
