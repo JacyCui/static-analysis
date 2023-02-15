@@ -80,7 +80,7 @@ module.exports = {
                         ]
                     },
                     {
-                        text: '第二部分：数据流分析',
+                        text: '第二部分：数据流分析及其应用',
                         items: [
                             {text: '3 数据流分析-应用', link: '/03-dfa-ap/'},
                             {text: '4 数据流分析-基础', link: '/04-dfa-fd/'},
@@ -88,7 +88,7 @@ module.exports = {
                         ]
                     },
                     {
-                        text: '第三部分：指针分析',
+                        text: '第三部分：指针分析及其应用',
                         items: [
                             {text: '6 指针分析-引入', link: '/06-pta-intro/'},
                             {text: '7 指针分析-基础', link: '/07-pta-fd/'},
@@ -127,7 +127,7 @@ module.exports = {
                 ]
             },
             {
-                title: '第二部分：数据流分析',   
+                title: '第二部分：数据流分析及其应用',   
                 // path: '/03-dfa-ap/',
                 collapsable: false,
                 sidebarDepth: 2,
@@ -138,7 +138,7 @@ module.exports = {
                 ]
             },
             {
-                title: '第三部分：指针分析',   
+                title: '第三部分：指针分析及其应用',   
                 // path: '/06-pta-intro/',
                 collapsable: false,
                 sidebarDepth: 2,
