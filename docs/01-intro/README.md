@@ -242,7 +242,10 @@ z = x + y;
 ## 1.4 自检问题
 
 1. 静态分析（Static Analysis）和动态测试（Dynamic Testing）的区别是什么？
+
 2. 完全性（Soundness）、正确性（Completeness）、假积极（False Positives）和假消极（False Negatives）分别是什么含义？
+
 3. 为什么静态分析通常需要尽可能保证完全性？
+
 4. 如何理解抽象（Abstraction）和过近似（Over-Approximation）？
 

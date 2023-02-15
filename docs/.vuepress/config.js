@@ -106,7 +106,6 @@ module.exports = {
                     }                    
                 ]
             },
-            { text: '笔者博客', link: 'https://blog.cuijiacai.com' },
             { text: '配套实验', link: 'https://tai-e.pascal-lab.net/'}
         ],
         repo: 'JacyCui/static-analysis', // 文档项目的github仓库

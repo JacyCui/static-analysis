@@ -336,8 +336,11 @@ $$
 ## 2.3 自检问题
 
 1. 编译器（Compiler）和静态分析器（Static Analyzer）的关系是什么？
+
 2. 三地址码（3-Address Code, 3AC）是什么，它的常用形式有哪些？
+
 3. 如何在中间表示（Intermediate Representation, IR）的基础上构建基块（Basic Block, BB）？
+
 4. 如何在基块的基础上构建控制流图（Control Flow Graph, CFG）?
 
 
