@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!-- Setup KaTeX -->
+    <script src="/pseudocode/katex.js" type="text/javascript"></script>
+    <!-- Pseudocode -->
+    <link rel="stylesheet" href="/pseudocode/pseudocode.css" type="text/css">
+    <script src="/pseudocode/pseudocode.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <pre id="demo" style="display:none;">
+        \begin{algorithm}
+        \caption{Interprocedural Context-Sensitive Whole-Program Pointer Analysis}
+        \begin{algorithmic}
+        \INPUT Entry method $m^{entry}$ and a context generator \CALL{Select}{$c, l, c':o_i$}.
+        \OUTPUT Pointer flow graph $PFG$ and point-to set of $pt(x)$ and call graph $CG$, all context-sensitive.
+        \STATE $WL := []$ \COMMENT{work list, initialized as empty}
+        \STATE $PFG := \{\}$ \COMMENT{context-sensitive pointer flow graph, initialized as empty}
+        \STATE $S := \{\}$ \COMMENT{set of reachable statements, initialized as empty}
+        \STATE $RM := \{\}$ \COMMENT{set of context-sensitive reachable methods, initialized as empty}
+        \STATE $CG := \{\}$ \COMMENT{context-sensitive call graph, initialized as empty}
+        \STATE
+        \PROCEDURE{Solve}{$m^{entry}$} \COMMENT{main algorithm}
+            \STATE \CALL{AddReachable}{$[]:m^{entry}$}
+            \WHILE{$WL$ \textbf{is not} empty}
+                \STATE remove $(n, pts)$ from $WL$
+                \STATE $\Delta := pts - pt(n)$
+                \STATE \CALL{Propagate}{$n, \Delta$}
+                \IF{$n$ represents a variable $c:x$}
+                    \FOR{\textbf{each} $c':o_i \in \Delta$}
+                        \FOR{\textbf{each} $x.f = y \in S$}
+                            \STATE \CALL{AddEdge}{$c:y, c':o_i.f$}
+                        \ENDFOR
+                        \FOR{\textbf{each} $y = x.f \in S$}
+                            \STATE \CALL{AddEdge}{$c':o_i.f, c:y$}
+                        \ENDFOR
+                        \STATE \CALL{ProcessCall}{$c:x, c':o_i$}
+                    \ENDFOR
+                \ENDIF
+            \ENDWHILE
+        \ENDPROCEDURE
+        \STATE
+        \PROCEDURE{AddReachable}{$c:m$}
+            \IF{$c:m \notin RM$}
+                \STATE add $c:m$ to $RM$
+                \STATE $S = S \cup S_{m}$ \COMMENT{$S_m$ is the set of statements in method $m$.}
+                \FOR{\textbf{each} pointer $x \in S_{m}$}
+                    \STATE $pt(c:x) := \{\}$ \COMMENT{poinrt-to set of each context-sensitive pointer, initialized as empty}
+                \ENDFOR
+                \FOR{\textbf{each} $i:x=new\ T()\in S_{m}$}
+                    \STATE add $(c:x, \{c:o_i\})$ to $WL$
+                \ENDFOR
+                \FOR{\textbf{each} $x=y\in S_{m}$}
+                    \STATE \CALL{AddEdge}{$c:y, c:x$}
+                \ENDFOR
+            \ENDIF
+        \ENDPROCEDURE
+        \STATE
+        \PROCEDURE{ProcessCall}{$c:x, c':o_i$}
+            \FOR{\textbf{each} $l: r = x.k(a_1, ..., a_n) \in S$}
+                \STATE $m :=$ \CALL{Dispatch}{$o_i, k$}
+                \STATE $c^t :=$ \CALL{Select}{$c, l, c':o_i$}
+                \STATE add $(c^t: m_{this}, \{c':o_i\})$ to $WL$
+                \IF{$c:l \to c^t:m \notin CG$}
+                    \STATE add $c:l \to c^t:m$ to $CG$
+                    \STATE \CALL{AddReachable}{$c^t:m$}
+                    \FOR{\textbf{each} parameter $p_i$ \textbf{of} $m$}
+                        \STATE \CALL{AddEdge}{$c:a_i, c^t:p_i$}
+                    \ENDFOR
+                    \STATE \CALL{AddEdge}{$c^t:m_{ret}, c:r$}
+                \ENDIF
+            \ENDFOR
+        \ENDPROCEDURE
+        \end{algorithmic}
+        \end{algorithm}
+    </pre>
+    <script>
+        let options = {
+            indentSize: '1.4em',
+            commentDelimiter: ' // ',
+            lineNumber: true,
+            lineNumberPunc: ':',
+            noEnd: false,
+            captionCount: 7.1//,
+            //titlePrefix: "Program"
+        };
+        pseudocode.renderElement(document.getElementById("demo"), options);                                 
+    </script>
+</body>
+</html>

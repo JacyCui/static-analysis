@@ -100,13 +100,13 @@ module.exports = {
                             {text: '7 指针分析-基础', link: '/07-pta-fd/'},
                             {text: '8 指针分析-上下文敏感', link: '/08-pta-cs/'},
                             {text: '9 静态分析与安全', link: '/09-security/'},
-                            {text: '10 基于Datalog的程序分析', link: '/10-datalog/'}
+                            {text: '10 基于 Datalog 的程序分析', link: '/10-datalog/'}
                         ]
                     },
                     {
                         text: '第四部分：技术拓展',
                         items: [
-                            {text: '11 CFL可达与IFDS', link: '/11-ifds/'},
+                            {text: '11 CFL 可达与 IFDS', link: '/11-ifds/'},
                             {text: '12 完整性与近似完整性', link: '/12-soundiness/'}
                         ]
                     }                    

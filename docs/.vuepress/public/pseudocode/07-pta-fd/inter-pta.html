@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!-- Setup KaTeX -->
+    <script src="/pseudocode/katex.js" type="text/javascript"></script>
+    <!-- Pseudocode -->
+    <link rel="stylesheet" href="/pseudocode/pseudocode.css" type="text/css">
+    <script src="/pseudocode/pseudocode.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <pre id="demo" style="display:none;">
+        \begin{algorithm}
+        \caption{Interprocedural Context-Insensitive Whole-Program Pointer Analysis}
+        \begin{algorithmic}
+        \INPUT Entry method $m^{entry}$.
+        \OUTPUT Pointer flow graph $PFG$ and point-to set of $pt(x)$ and call graph $CG$.
+        \STATE $WL := []$ \COMMENT{work list, initialized as empty}
+        \STATE $PFG := \{\}$ \COMMENT{pointer flow graph, initialized as empty}
+        \STATE $S := \{\}$ \COMMENT{set of reachable statements, initialized as empty}
+        \STATE $RM := \{\}$ \COMMENT{set of reachable methods, initialized as empty}
+        \STATE $CG := \{\}$ \COMMENT{call graph, initialized as empty}
+        \STATE
+        \PROCEDURE{Solve}{$m^{entry}$} \COMMENT{main algorithm}
+            \STATE \CALL{AddReachable}{$m^{entry}$}
+            \WHILE{$WL$ \textbf{is not} empty}
+                \STATE remove $(n, pts)$ from $WL$
+                \STATE $\Delta := pts - pt(n)$
+                \STATE \CALL{Propagate}{$n, \Delta$}
+                \IF{$n$ represents a variable $x$}
+                    \FOR{\textbf{each} $o_i \in \Delta$}
+                        \FOR{\textbf{each} $x.f = y \in S$}
+                            \STATE \CALL{AddEdge}{$y, o_i.f$}
+                        \ENDFOR
+                        \FOR{\textbf{each} $y = x.f \in S$}
+                            \STATE \CALL{AddEdge}{$o_i.f, y$}
+                        \ENDFOR
+                        \STATE \CALL{ProcessCall}{$x, o_i$}
+                    \ENDFOR
+                \ENDIF
+            \ENDWHILE
+        \ENDPROCEDURE
+        \STATE
+        \PROCEDURE{AddReachable}{$m$}
+            \IF{$m \notin RM$}
+                \STATE add $m$ to $RM$
+                \STATE $S = S \cup S_{m}$ \COMMENT{$S_m$ is the set of statements in method $m$.}
+                \FOR{\textbf{each} pointer $x \in S_{m}$}
+                    \STATE $pt(x) := \{\}$ \COMMENT{poinrt-to set of each pointer, initialized as empty}
+                \ENDFOR
+                \FOR{\textbf{each} $i:x=new\ T()\in S_{m}$}
+                    \STATE add $(x, \{o_i\})$ to $WL$
+                \ENDFOR
+                \FOR{\textbf{each} $x=y\in S_{m}$}
+                    \STATE \CALL{AddEdge}{$y, x$}
+                \ENDFOR
+            \ENDIF
+        \ENDPROCEDURE
+        \STATE
+        \PROCEDURE{ProcessCall}{$x, o_i$}
+            \FOR{\textbf{each} $l: r = x.k(a_1, ..., a_n) \in S$}
+                \STATE $m :=$ \CALL{Dispatch}{$o_i, k$}
+                \STATE add $(m_{this}, \{o_i\})$ to $WL$
+                \IF{$l \to m \notin CG$}
+                    \STATE add $l \to m$ to $CG$
+                    \STATE \CALL{AddReachable}{$m$}
+                    \FOR{\textbf{each} parameter $p_i$ \textbf{of} $m$}
+                        \STATE \CALL{AddEdge}{$a_i, p_i$}
+                    \ENDFOR
+                    \STATE \CALL{AddEdge}{$m_{ret}, r$}
+                \ENDIF
+            \ENDFOR
+        \ENDPROCEDURE
+        \end{algorithmic}
+        \end{algorithm}
+    </pre>
+    <script>
+        let options = {
+            indentSize: '1.4em',
+            commentDelimiter: ' // ',
+            lineNumber: true,
+            lineNumberPunc: ':',
+            noEnd: false,
+            captionCount: 6.2//,
+            //titlePrefix: "Program"
+        };
+        pseudocode.renderElement(document.getElementById("demo"), options);                                 
+    </script>
+</body>
+</html>

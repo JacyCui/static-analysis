@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!-- Setup KaTeX -->
+    <script src="/pseudocode/katex.js" type="text/javascript"></script>
+    <!-- Pseudocode -->
+    <link rel="stylesheet" href="/pseudocode/pseudocode.css" type="text/css">
+    <script src="/pseudocode/pseudocode.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <pre id="demo" style="display:none;">
+        \begin{algorithm}
+        \caption{Intraprocedural Context-Insensitive Whole-Program Pointer Analysis}
+        \begin{algorithmic}
+        \INPUT Set of statements of the input program $S$.
+        \OUTPUT Pointer flow graph $PFG$ and point-to set of each pointer $x$ denoted by $pt(x)$.
+        \STATE $WL := []$ \COMMENT{work list, initialized as empty}
+        \STATE $PFG := \{\}$ \COMMENT{pointer flow graph, initialized as empty}
+        \FOR{\textbf{each} pointer $x \in S$}
+            \STATE $pt(x) := \{\}$ \COMMENT{point-to set of each pointer, initialized as empty}
+        \ENDFOR
+        \STATE
+        \PROCEDURE{Solve}{$S$} \COMMENT{main algorithm}
+            \FOR{\textbf{each} $i:x = new\ T() \in S$}
+                \STATE add $(x, \{o_i\})$ to $WL$
+            \ENDFOR
+            \FOR{\textbf{each} $x = y \in S$}
+                \STATE \CALL{AddEdge}{$y, x$}
+            \ENDFOR
+            \WHILE{$WL$ \textbf{is not} empty}
+                \STATE remove $(n, pts)$ from $WL$
+                \STATE $\Delta := pts - pt(n)$
+                \STATE \CALL{Propagate}{$n, \Delta$}
+                \IF{$n$ represents a variable $x$}
+                    \FOR{\textbf{each} $o_i \in \Delta$}
+                        \FOR{\textbf{each} $x.f = y \in S$}
+                            \STATE \CALL{AddEdge}{$y, o_i.f$}
+                        \ENDFOR
+                        \FOR{\textbf{each} $y = x.f \in S$}
+                            \STATE \CALL{AddEdge}{$o_i.f, y$}
+                        \ENDFOR
+                    \ENDFOR
+                \ENDIF
+            \ENDWHILE
+        \ENDPROCEDURE
+        \STATE
+        \PROCEDURE{AddEdge}{$s, t$}
+            \IF{$s \to t \notin PFG$}
+                \STATE add $s \to t$ to $PFG$
+                \IF{$pt(s)$ \textbf{is not} empty}
+                    \STATE add $(t, pt(s))$ to $WL$
+                \ENDIF
+            \ENDIF
+        \ENDPROCEDURE
+        \STATE
+        \PROCEDURE{Propagate}{$n, pts$}
+            \IF{$pts$ \textbf{is not} empty}
+                \STATE $pt(n) = pt(n) \cup pts$
+                \FOR{\textbf{each} $n\to s\in PFG$}
+                    \STATE add $(s, pts)$ to $WL$
+                \ENDFOR
+            \ENDIF
+        \ENDPROCEDURE
+        \end{algorithmic}
+        \end{algorithm}
+    </pre>
+    <script>
+        let options = {
+            indentSize: '1.4em',
+            commentDelimiter: ' // ',
+            lineNumber: true,
+            lineNumberPunc: ':',
+            noEnd: false,
+            captionCount: 6.1//,
+            //titlePrefix: "Program"
+        };
+        pseudocode.renderElement(document.getElementById("demo"), options);                                 
+    </script>
+</body>
+</html>

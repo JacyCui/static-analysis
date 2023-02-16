@@ -47,9 +47,9 @@ Number id(Number n) {
 
 <p style="text-align:center"><img src="./ci-eg.png" alt="ci-eg" style="zoom:30%;"/></p>
 
-从而，分析 `x.get()` 时会对两个可能的接收对象分别调用 `get` 方法，从而得到结果为1或2，即 $i$ 的常量传播分析结果为 NAC，这是错误的。
+从而，分析 `x.get()` 时会对两个可能的接收对象分别调用 `get` 方法，从而得到结果为1或2，即 $i$ 的常量传播分析结果为 NAC，这是不准确的。
 
-错误的原因是，由于我们不区分上下文，导致对于 `id` 方法的所有调用会汇合到一处，从而丢失了精度，造成了后续指针的指向集合当中存在假的积极值（False Positive）。
+不准确的原因是，由于我们不区分上下文，导致对于 `id` 方法的所有调用会汇合到一处，从而丢失了精度，造成了后续指针的指向集合当中存在假的积极值（False Positive）。
 
 但如果我们进行上下文敏感的分析，则最终得到的PFG如下：
 
@@ -62,25 +62,32 @@ Number id(Number n) {
 关于上下文敏感与不敏感的基本概念参见定义6.6以及6.3.2节的相关内容。
 
 上下文不敏感的分析的精度丢失主要是由于下面一些原因：
+
 - 在动态执行的过程中，每一个方法可能在不同的调用语境中被调用多次。
+
 - 在不同的调用语境下面，方法中的变量可能会指向不同的对象。
+
 - 在上下文不敏感的指针分析中，不同的上下文被混合在了一起，并传递给程序的其他部分（通过返回值或者副作用），这就导致了虚假的数据流。
+
     - 比如说上面的引例，其上下文不敏感的分析结果中， $pt(x)$ 中的 $o_2$ 和 $pt(y)$ 中的 $o_1$ 都是虚假的指向对象，从而给常量传播分析造成了虚假的数据流。
 
 ::: conclusion 结论8.1
 上下文敏感通过区分不同语境下的不同数据流来模拟调用上下文，从而提高精度。
 :::
 
-最古老的，也是最为人熟知的上下文敏感策略是调用点敏感（也称为调用串），用一连串的调用点来表示上下文，即：本方法的调用点、调用者的调用点、调用者的调用者的调用点...... 调用点敏感其实就是对动态执行过程中调用栈的抽象，这里我们有个直觉上的印象就好，因为我们后面会以它为例去讲解规则和算法。具体的各种上下文敏感策略的形式化的定义会在8.4（这一讲的第4节）中详细讲解。
+最古老的，也是最为人熟知的上下文敏感策略是调用点敏感（也称为调用串），用一连串的调用点来表示上下文，即：本方法的调用点、调用者的调用点、调用者的调用者的调用点...... 调用点敏感其实就是对动态执行过程中调用栈的抽象，这里我们有个直觉上的印象就好，因为我们后面会以它为例去讲解规则和算法。具体的各种上下文敏感策略的形式化的定义会在8.4节中详细讲解。
 
 比如说之前的引例，方法 `id(Number)` 有两个上下文，`[5]` 和 `[6]`。
 
 #### 基于克隆的上下文敏感
 
 ::: definition 定义8.1
-定义**基于克隆的上下文敏感的指针分析（Cloning-based Context-sensitive Pointer Analysis）**为满足以下3个条件的指针分析：
+定义 **基于克隆的上下文敏感的指针分析（Cloning-based Context-sensitive Pointer Analysis）** 为满足以下3个条件的指针分析：
+
 - 每个方法都被一个或者多个上下文修饰；
+
 - 变量也被上下文修饰（继承自声明该变量的方法）；
+
 - 对于每个上下文，都会恰有一个方法及该方法中的变量的克隆。
 :::
 
@@ -95,7 +102,9 @@ Number id(Number n) {
 并且，面向对象语言（比如说Java）本身就是典型的堆密集型（heap-intensive）语言，会频繁地操作堆内存。
 
 在实践中，为了提升精度，上下文敏感也应当被应用到堆抽象中。
+
 - 抽象的对象也应当用上下文来修饰（称为堆上下文），最普遍的选择是继承该对象分配点所在方法的上下文。
+
 - 上下文敏感的堆抽象在分配点抽象的基础上提供了一个粒度更精确的堆模型。
 
 <p style="text-align:center"><img src="./cs-allocation-site.png" alt="cs-allocation-site" style="zoom:30%;"/></p>
@@ -105,9 +114,13 @@ Number id(Number n) {
 :::
 
 那么，为什么上下文敏感的堆抽象能够提升精度呢？
+
 - 在动态执行的过程中，一个分配点可以在不同的调用语境下创建多个对象；
+
 - 不同的对象（有相同的分配点分配）可能会携带不同的数据流被操作，比如说在它们的字段中存储不同的值。
+
 - 在指针分析中，不带堆上下文分析这样的代码可能会由于合并不同上下文中的数据流到一个抽象对象中而丢失精度。
+
 - 相比之下，通过堆上下文来区分同一个分配点的不同对象能够获得不少的精度。
 
 比如对于下面这个例子：
@@ -129,19 +142,19 @@ class X {
 }
 ```
 
-我们对上面的程序作3次指针分析进行对比，分别是：上下文敏感，不考虑堆上下文、上下文敏感，考虑堆上下文、上下文不敏感，考虑堆上下文。
+我们对上面的程序作3次指针分析进行对比，分别是：上下文敏感，不考虑堆上下文；上下文敏感，考虑堆上下文；上下文不敏感，考虑堆上下文。
 
 <p style="text-align:center"><img src="./cs-heap.png" alt="cs-heap" style="zoom:30%;"/></p>
 
-从第一次分析中，我们会发现，在将 $3:p$ 和 $4:p$ 合并给 $o_8$ 的时候造成了虚假的数据流，从而导致了对 $n$ 分析的误差。
+从第一次分析中，我们会发现，在将 $3:p$ 和 $4:p$ 合并给 $o_8$ 的时候造成了虚假的数据流，从而导致了对 $n$ 分析的不精确。
 
 在第二次分析中，我们可以看到，考虑了堆上下文之后，第一次分析的问题就被解决了，我们分别考虑了在程序第8行分配点处分配的两个对象，用分配点的上下文修饰（这里上下文暂定为调用点的位置），即 $3:o_8$ 和 $4:o_8$ ，从而避免了数据流合并带来的精度丢失。
 
-而第三次分析告诉我们，在不考虑调用上下文的情况下单单考虑堆上下文是无法提高精度的，因为堆上下文是由于调用上下文而产生的。
+而第三次分析告诉我们，在不考虑调用上下文的情况下单考虑堆上下文是无法提高精度的，因为堆上下文是由于调用上下文而产生的。
 
 ## 8.2 上下文敏感的指针分析规则
 
-和7.1一样，我们将用一系列推导式的形式来形式化地定义上下文敏感的指针分析规则。
+和7.1一样，我们将用一系列推导式来形式化地定义上下文敏感的指针分析规则。
 
 ### 8.2.1 定义和记号
 
@@ -175,22 +188,25 @@ class X {
 
 前面四个语句其实和上下文不敏感的规则除了在指针和对象面前增加了上下文的修饰以外别无二致。
 
-不过调用语句就又些别的区别了，因为调用语句除了在原本上下文不敏感的规则之上增加了上下文之外，还有负责被调用者上下文的生成，我们用 `Select` 函数来表示调用者根据调用点处的信息生成被调用者上下文的过程。
+不过调用语句就有些别的区别了，因为调用语句除了在原本上下文不敏感的规则之上增加了上下文之外，还有负责被调用者上下文的生成，我们用 `Select` 函数来表示调用者根据调用点处的信息生成被调用者上下文的过程。
 
 |类型|语句|规则（在上下文 $c$ 下）|
 |:-:|:-:|:-:|
-|调用|`l: r = x.k(a1, ..., an)`|$c':o_i\in pt(c:x),$<br/>$m = Dispatch(o_i, k), c^t = Select(c, l, c':o_i)$<br/>$c'':o_u\in pt(c:a_j), 1\le j\le n$<br/>$\underline{c''':o_v\in pt(c^t:m_{ret})}$<br/>$c':o_i\in pt(c^t:m_{this})$<br/>$c'':o_u\in pt(c^t:m_{p_j}), 1\le j\le n$<br/>$c''':o_v\in pt(c:r)$|
+|调用|`l: r = x.k(a1, ..., an)`|$c':o_i\in pt(c:x)$<br/>$m = Dispatch(o_i, k), c^t = Select(c, l, c':o_i)$<br/>$c'':o_u\in pt(c:a_j), 1\le j\le n$<br/>$\underline{c''':o_v\in pt(c^t:m_{ret})}$<br/>$c':o_i\in pt(c^t:m_{this})$<br/>$c'':o_u\in pt(c^t:m_{p_j}), 1\le j\le n$<br/>$c''':o_v\in pt(c:r)$|
 
-其中， $c$ 是调用者的上下文， $c^t$ 是被调用者，即目标方法的上下文， $c^t:m_{this}$ 是方法 $c^t:m$ 的 `this` 变量， $c^t:m_{p_j}$ 是方法 $c^t:m$ 的第j个形参， $c^t:m_{ret}$ 是存放 $c^t:m$ 返回值的变量。
+其中， $c$ 是调用者的上下文， $c^t$ 是被调用者，即目标方法的上下文， $c^t:m_{this}$ 是方法 $c^t:m$ 的 `this` 变量， $c^t:m_{p_j}$ 是方法 $c^t:m$ 的第 $j$ 个形参， $c^t:m_{ret}$ 是存放 $c^t:m$ 返回值的变量。
 
 -  $Dispatch(o_i, k)$ 和上一讲一致，根据 $o_i$ 的类型对虚调用 $k$ 做方法派发，从而获得一个目标方法。
+
 -  $Select(c, l, c':o_i)$ 根据在调用点 $l$ 处可获得的信息为目标方法 $m$ 选择一个上下文，即目标上下文的生成函数。
+
     -  `Select` 的输入是调用点 $l$ 、调用点处的上下文 $c$ 、接收对象 $c':o_i$；
+
     - `Select` 的输出是目标方法的的上下文 $c^{t}$ 。
 
 <p style="text-align:center"><img src="./select-eg.png" alt="select-eg" style="zoom:50%;"/></p>
 
-> 关于 `Select` ，我们暂时将其视为一个抽象，详细的内容，我们会在第4部分具体讨论。
+> 关于 `Select` ，我们暂时将其视为一个抽象，详细的内容，我们会在第8.4部分具体讨论。其实就这么一个简单的 `Select` 抽象就将上下文敏感分析的算法和上下文的生成这两件事情给解耦了，这是计算机学科中非常常用的思想，读者可细细体会。
 
 ## 8.3 上下文敏感的指针分析算法
 
@@ -209,7 +225,7 @@ $$n \in CSPointer \subseteq (C\times V)\cup(C\times O\times F)$$
 
 - PFG中的边 $x\to y \in CSPointer \times CSPointer$ 表示指针 $x$ 指向的对象可能会流向指针 $y$ 的指向集合。
 
-其中， $C$ 表示所有上下文的集合， $V$ 表示所有变量的集合， $O$ 表示左右对象的集合， $F$ 表示所有字段的集合。
+其中， $C$ 表示所有上下文的集合， $V$ 表示所有变量的集合， $O$ 表示所有对象的集合， $F$ 表示所有字段的集合。
 :::
 
 比如说下面这个例子中，PFG-C.S.中包含了两个方法 `id` 中变量 `n` 的结点，每个上下文各有一个节点。
@@ -224,86 +240,21 @@ $$n \in CSPointer \subseteq (C\times V)\cup(C\times O\times F)$$
 |赋值|`x = y`|$\underline{c':o_i\in pt(c:y)}$<br/>$c':o_i \in pt(c:x)$|$c:y \to c:x$|
 |存储|`x.f = y`|$\underline{c':o_i\in pt(c:x), c'':o_j\in pt(c:y)}$<br/>$c'':o_j\in pt(c':o_i.f)$|$c:y \to c':o_i.f$|
 |载入|`y = x.f`|$\underline{c':o_i\in pt(c:x), c'':o_j\in pt(c':o_i.f)}$<br/>$c'':o_j\in pt(c:y)$|$c':o_i.f\to c:y$|
-|调用|`l: r = x.k(a1, ..., an)`|$c':o_i\in pt(c:x),$<br/>$m = Dispatch(o_i, k), c^t = Select(c, l, c':o_i)$<br/>$c'':o_u\in pt(c:a_j), 1\le j\le n$<br/>$\underline{c''':o_v\in pt(c^t:m_{ret})}$<br/>$c':o_i\in pt(c^t:m_{this})$<br/>$c'':o_u\in pt(c^t:m_{p_j}), 1\le j\le n$<br/>$c''':o_v\in pt(c:r)$|$c:a_1\to c^t:m_{p_1}$<br/>$... ...$<br/>$c:a_n \to c^t:m_{p_n}$<br/>$c^t:m_{ret}\to r$|
+|调用|`l: r =`</br></br>`x.k(a1, ..., an)`|$c':o_i\in pt(c:x)$<br/>$m = Dispatch(o_i, k), c^t = Select(c, l, c':o_i)$<br/>$c'':o_u\in pt(c:a_j), 1\le j\le n$<br/>$\underline{c''':o_v\in pt(c^t:m_{ret})}$<br/>$c':o_i\in pt(c^t:m_{this})$<br/>$c'':o_u\in pt(c^t:m_{p_j}), 1\le j\le n$<br/>$c''':o_v\in pt(c:r)$|$c:a_1\to c^t:m_{p_1}$<br/>$... ...$<br/>$c:a_n \to c^t:m_{p_n}$<br/>$c^t:m_{ret}\to c:r$|
 
 ### 8.3.2 算法
 
-**算法8.1** 过程间上下文敏感的全程序指针分析算法
+::: algorithm 算法8.1 过程间上下文敏感的全程序指针分析算法
 
-![cs-pta-alg](./cs-pta-alg.png)
-
-<!--
-    \begin{algorithm}
-    \caption{Interprocedural Context-Sensitive Whole-Program Pointer Analysis}
-    \begin{algorithmic}
-    \INPUT Entry method $m^{entry}$ and a context generator \CALL{Select}{$c, l, c':o_i$}.
-    \OUTPUT Pointer flow graph $PFG$ and point-to set of $pt(x)$ and call graph $CG$, all context-sensitive.
-    \STATE $WL := []$ \COMMENT{work list, initialized as empty}
-    \STATE $PFG := \{\}$ \COMMENT{context-sensitive pointer flow graph, initialized as empty}
-    \STATE $S := \{\}$ \COMMENT{set of reachable statements, initialized as empty}
-    \STATE $RM := \{\}$ \COMMENT{set of context-sensitive reachable methods, initialized as empty}
-    \STATE $CG := \{\}$ \COMMENT{context-sensitive call graph, initialized as empty}
-    \STATE
-    \PROCEDURE{Solve}{$m^{entry}$} \COMMENT{main algorithm}
-        \STATE \CALL{AddReachable}{$[]:m^{entry}$}
-        \WHILE{$WL$ \textbf{is not} empty}
-            \STATE remove $(n, pts)$ from $WL$
-            \STATE $\Delta := pts - pt(n)$
-            \STATE \CALL{Propagate}{$n, \Delta$}
-            \IF{$n$ represents a variable $c:x$}
-                \FOR{\textbf{each} $c':o_i \in \Delta$}
-                    \FOR{\textbf{each} $x.f = y \in S$}
-                        \STATE \CALL{AddEdge}{$c:y, c':o_i.f$}
-                    \ENDFOR
-                    \FOR{\textbf{each} $y = x.f \in S$}
-                        \STATE \CALL{AddEdge}{$c':o_i.f, c:y$}
-                    \ENDFOR
-                    \STATE \CALL{ProcessCall}{$c:x, c':o_i$}
-                \ENDFOR
-            \ENDIF
-        \ENDWHILE
-    \ENDPROCEDURE
-    \STATE
-    \PROCEDURE{AddReachable}{$c:m$}
-        \IF{$c:m \notin RM$}
-            \STATE add $c:m$ to $RM$
-            \STATE $S = S \cup S_{m}$ \COMMENT{$S_m$ is the set of statements in method $m$.}
-            \FOR{\textbf{each} pointer $x \in S_{m}$}
-                \STATE $pt(c:x) := \{\}$ \COMMENT{poinrt-to set of each context-sensitive pointer, initialized as empty}
-            \ENDFOR
-            \FOR{\textbf{each} $i:x=new\ T()\in S_{m}$}
-                \STATE add $(c:x, \{c:o_i\})$ to $WL$
-            \ENDFOR
-            \FOR{\textbf{each} $x=y\in S_{m}$}
-                \STATE \CALL{AddEdge}{$c:y, c:x$}
-            \ENDFOR
-        \ENDIF
-    \ENDPROCEDURE
-    \STATE
-    \PROCEDURE{ProcessCall}{$c:x, c':o_i$}
-        \FOR{\textbf{each} $l: r = x.k(a_1, ..., a_n) \in S$}
-            \STATE $m :=$ \CALL{Dispatch}{$o_i, k$}
-            \STATE $c^t :=$ \CALL{Select}{$c, l, c':o_i$}
-            \STATE add $(c^t: m_{this}, \{c':o_i\})$ to $WL$
-            \IF{$c:l \to c^t:m \notin CG$}
-                \STATE add $c:l \to c^t:m$ to $CG$
-                \STATE \CALL{AddReachable}{$c^t:m$}
-                \FOR{\textbf{each} parameter $p_i$ \textbf{of} $m$}
-                    \STATE \CALL{AddEdge}{$c:a_i, c^t:p_i$}
-                \ENDFOR
-                \STATE \CALL{AddEdge}{$c^t:m_{ret}, c:r$}
-            \ENDIF
-        \ENDFOR
-    \ENDPROCEDURE
-    \end{algorithmic}
-    \end{algorithm}
--->
+<iframe src="/pseudocode/08-pta-cs/inter-pta-cs.html" frameborder="no" marginwidth="0" width="100%" height="1250px" marginheight="0" scrolling="auto"></iframe>
 
 其中， `Propagate` 和 `AddEdge` 子过程同算法7.1，`Dispatch` 过程见算法5.1。
 
-对比算法7.2可以发现，算法8.1只是在算法7.2的基础上增加了上下文敏感的内容，更具体的，只是在指针和对象之前加上了上下文的修饰，并在调用语句的处理当中增加了新上下文的生成（见算法第35行）而已，整体的思路和框架没有发生任何变化。详细的分析同7.3.2以及7.4.4.2，这里不作赘述。
+:::
 
-其中，需要注意以下的是我们设置入口方法的上下文为空（见算法第8行），因为一般情况下程序只有一个入口。
+对比算法7.2可以发现，算法8.1只是在算法7.2的基础上增加了上下文敏感的内容，更具体的，只是在指针和对象之前加上了上下文的修饰，并在调用语句的处理当中增加了新上下文的生成（见算法第 46 行）而已，整体的思路和框架没有发生任何变化。详细的分析同7.3.2以及7.4.4，这里不作赘述。
+
+其中，需要注意一下的是我们设置入口方法的上下文为空（见算法第8行），因为一般情况下程序的入口方法只会被操作系统调用一次，因而不需要用上下文加以区分。
 
 ## 8.4 上下文敏感性的各种变体
 
@@ -315,11 +266,12 @@ $$n \in CSPointer \subseteq (C\times V)\cup(C\times O\times F)$$
 定义一个指针分析的 **上下文敏感性（Context Sensitivity）** 为一个 **上下文生成子（Context Generator）** ，记为 $Select(c, l, c':o_i)$ ，描述了实例方法调用的时候用怎样的上下文去修饰目标方法。
 
 - `Select` 函数的输入是调用点处的上下文 $c$ ，调用点 $l$ ，以及调用方法的带有堆上下文的接收对象 $c':o_i$ 。
+
 - `Select` 函数的输出是用于修饰目标方法上下文。
 
 :::
 
-> 简单理解， `Selective` 函数是从调用者上下文（Caller Context）到被调用者上下文（Callee Context）的映射。
+> 简单理解， `Select` 函数是从调用者上下文（Caller Context）到被调用者上下文（Callee Context）的映射。
 
 ::: definition 定义8.5
 如果对于不同的输入，`Select` 给出了相同的输出，称这种现象为**上下文重叠（Context Overlap）**。
@@ -331,6 +283,7 @@ $$n \in CSPointer \subseteq (C\times V)\cup(C\times O\times F)$$
 从而，我们可以直观的感受到：
 
 - 如果 `Select` 经常出现上下文重叠，指针分析的精度会受损，相应的，速度会提高；
+
 - 如果 `Select` 偶尔出现上下文重叠，指针分析的精度会提高，相应的，速度会减缓。
 :::
 
@@ -340,10 +293,12 @@ $$n \in CSPointer \subseteq (C\times V)\cup(C\times O\times F)$$
 定义**上下文不敏感（Context InSensitivity）**：
 
 $$
-Select(\underline{\ }, \underline{\ }, \underline{\ }) = []
+Select(\_, \_, \_) = []
 $$
 
 :::
+
+> 和4.6.2节状态转移方程中的 `_` 类似， `_` 表示通配符，后续不再额外解释。
 
 下面，我们将会讨论几种不同的 `Select` 函数，比较它们之间精度和速度上的区别。
 
@@ -353,7 +308,7 @@ $$
 定义**调用点敏感（Call-Site Sensitivity）**：
 
 $$
-c = [l', ..., l''] \Longrightarrow Select(c, l, \underline{\ }) = [l', ..., l'', l]
+c = [l', ..., l''] \Longrightarrow Select(c, l, \_) = [l', ..., l'', l]
 $$
 
 调用点敏感也称为**调用串敏感（Call-String Sensitivity）**。
@@ -363,30 +318,39 @@ $$
 
 考虑递归调用，因为我们的分析是流不敏感的，在分析递归调用的时候不会有所谓的基础情况（Base Case）的概念，从而一旦碰到递归，定义8.7中的 `Select` 函数就会构建出一个无穷的调用串，从而使得我们的指针分析算法无法终止。
 
-从而，我们会对调用串的长度进行认为的限制，以保证指针分析的算法能够终止。并且过长的调用串也会破坏我们的指针分析算法，因为递归调用的调用串是无意义的一长串相同的调用点。
+从而，我们会对调用串的长度进行人为的限制，以保证指针分析的算法能够终止。并且过长的调用串也会破坏我们的指针分析算法，因为递归调用的调用串是无意义的一长串相同的调用点。
 
 我们的处理方法是为上下文的长度设置一个上界，比如说 $k$ （k-Limiting Context Abstraction）。
+
 - 对于调用点敏感，每个上下文都由调用串的最后 $k$ 个调用点组成；
+
 - 在实际操作中， $k$ 是一个小数字，通常不超过3；
+
 - 方法上下文和堆上下文可能会使用不同的k。
+
     - 比如说方法上下文的 $k = 2$ ，堆上下文的 $k = 1$ 之类的。
 
 ::: definition 定义8.8
-定义**k-调用点敏感（k-Call-Site Sensitivity）**：
+定义 **k-调用点敏感（k-Call-Site Sensitivity）** ：
 
 $$
-c = [l_1, l_2, ..., l_k] \Longrightarrow Select(c, l, \underline{\ }) = [l_2, ..., l_k, l]
+c = [l_1, l_2, ..., l_k] \Longrightarrow Select(c, l, \_) = [l_2, ..., l_k, l]
 $$
 
-k-调用点敏感也称为**k-控制流分析（k-CFA, Control Flow Analysis）**。
+k-调用点敏感也称为 **k-控制流分析（k-CFA, Control Flow Analysis）** 。
 具体地：
+
 - 1-调用点敏感
 
-$$Select(\underline{\ }, l, \underline{\ }) = [l]$$
+$$
+Select(\_, l, \_) = [l]
+$$
 
 - 2-调用点敏感
 
-$$c = [l', l''] \Longrightarrow Select(c,l,\underline{\ }) = [l'', l]$$
+$$
+c = [l', l''] \Longrightarrow Select(c,l,\_) = [l'', l]
+$$
 
 :::
 
@@ -413,7 +377,7 @@ class C {
 }
 ```
 
-其中，关于 `Number` 、 `One` 、 `Two` 的类结构和引例中相同。为了简单起见，我们不考虑堆上下文，且忽略 `C.id(Number)` 方法中的 `this` 变量。
+其中，关于 `Number` 、 `One` 、 `Two` 的类结构和8.1.1的引例中相同。为了简单起见，我们不考虑堆上下文，且忽略 `C.id(Number)` 方法中的 `this` 变量。
 
 最终，我们得到的结果为如下，在这个例子中，我们通过区分上下文的方式成功的避免了对象数据流的汇合（对比8.1.1的引例）：
 
@@ -422,32 +386,34 @@ class C {
 ### 8.4.3 对象敏感
 
 ::: definition 定义8.9
-定义**对象敏感（Object Sensitivity）**：
+定义 **对象敏感（Object Sensitivity）** ：
 
 $$
-c' = [o_j, ..., o_k] \Longrightarrow Select(\underline{\ }, \underline{\ }, c':o_i) = [o_j, ..., o_k, o_i]
+c' = [o_j, ..., o_k] \Longrightarrow Select(\_, \_, c':o_i) = [o_j, ..., o_k, o_i]
 $$
 
-对象敏感也称作**分配点敏感（Allocation-Site Sensitivity）**。
+对象敏感也称作 **分配点敏感（Allocation-Site Sensitivity）** 。
 :::
 
 对象敏感中的上下文由一组抽象对象（由它们的分配点表示）组成。
+
 - 在方法调用的时候，使用接收对象以及接收对象的堆上下文作为被调用者的上下文（就像定义8.9中所形式化定义的那样）；
+
 - 根据不同的对象来区分不同的数据流操作，因为流动的数据往往都是由对象携带的（至少对于OO语言来说这是很常见的）。
 
 和调用点敏感类似的，我们可以通过限制上下文的尺寸来牺牲一部分精度，从而提高效率，并且避免由于递归导致的不可终止问题。
 
 ::: definition 定义8.10
-定义**k-对象敏感（k-Object Sensitivity）**：
+定义 **k-对象敏感（k-Object Sensitivity）** ：
 
 $$
-c' = [o_1, ..., o_k] \Longrightarrow Select(\underline{\ }, \underline{\ }, c':o_i) = [o_2, ..., o_k, o_i]
+c' = [o_1, ..., o_k] \Longrightarrow Select(\_, \_, c':o_i) = [o_2, ..., o_k, o_i]
 $$
 
 特别地，1-对象敏感：
 
 $$
-Select(\underline{\ }, \underline{\ }, c':o_i) = [o_i]
+Select(\_, \_, c':o_i) = [o_i]
 $$
 
 :::
@@ -489,12 +455,12 @@ class A {
 
 其实，在理论上，调用点敏感和对象敏感的精度是不可比的，因为它们各自有各自准的场景和不准的场景，而对于一个程序来说，各种场景的比例是不确定的东西，所以这两种上下文敏感的精度比较也就没有定论了。
 
-不过，在实践过程中，对于面向对象语言（比如说Java）来说，对象敏感的整体表现要由于调用点敏感，因为使用面向对象语言编程的时候我们会频繁地使用对象来传递数据，从而对象敏感能够更好的避免数据流的合并，从而提升精度。
+不过，在实践过程中，对于面向对象语言（比如说Java）来说，对象敏感的整体表现要优于调用点敏感，因为使用面向对象语言编程的时候我们会频繁地使用对象来传递数据，从而对象敏感能够更好的避免数据流的合并，从而提升精度。
 
 ### 8.4.4 类型敏感
 
 ::: definition 定义8.11
-定义**类型敏感（Type Sensitivity）**
+定义 **类型敏感（Type Sensitivity）** ：
 
 $$
 c' = [t', ..., t''] \Longrightarrow Select(\underline{\ }, \underline{\ }, c':o_i) = [t', ..., t'', InType(o_i)]
@@ -510,16 +476,37 @@ $$
 类似的，我们也可以定义k-类型敏感来限制冗长的上下文。
 
 ::: definition 定义8.12
-定义**k-类型敏感（k-Type Sensitivity）**：
+定义 **k-类型敏感（k-Type Sensitivity）** ：
 
 $$
-c' = [t_1, ..., t_k] \Longrightarrow Select(\underline{\ }, \underline{\ }, c':o_i) = [t_2, ..., t_k, InType(o_i)]
+c' = [t_1, ..., t_k] \Longrightarrow Select(\_, \_, c':o_i) = [t_2, ..., t_k, InType(o_i)]
 $$
 
 其中，$InType(o_i)$ 表示 $o_i$ 是在哪个类中被创建的。
 :::
 
 在相同的 $k$ 限制下，类型敏感不会比对象敏感更加精确，因为类型敏感是对对象敏感更粗糙的抽象。和对象敏感相比，类新敏感通过牺牲精度的方式来换取了更好的性能，它将同一个类型中的各个分配点在上下文中合并了。
+
+比如在下面的例子中：
+
+```java
+class X {
+    void main() {
+        Y y1 = new Y();
+        y1.foo();
+        Y y2 = new Y();
+        y2.foo();
+        Y y3 = new Y();
+        y3.foo();
+    }
+}
+class Y {
+    void foo() {}
+}
+```
+
+三次对于 `Y.foo` 的调用，如果采用1-调用点敏感，这三次调用分别具有不同的上下文：$[o_3]$ 、 $[o_5]$ 、 $[o_7]$ ，这是精确的；但如果采用1-类型敏感分析，这三次调用的上下文都是 $[X]$ ，这是更不精确的。
+
 
 ### 8.4.5 对比
 
@@ -530,25 +517,35 @@ $$
 > 数据来源：Yue Li, Tian Tan, Anders Møller, and Yannis Smaragdakis. “A Principled Approach to
 Selective Context Sensitivity for Pointer Analysis”. TOPLAS 2020.
 
-表中的数字越小越好，对于时间和可能错误的类型转换来说自然是越少越好；对于调用边，因为我们做的是饱和估计（见定义1.3）和可能性分析（见定义3.2），因此输出集越小说明我们的答案越精确。
+表中的数字越小越好，对于时间和可能错误的类型转换来说自然是越少越好；对于调用边，因为我们做的是过近似（见定义1.3）和可能性分析（见定义3.2），因此输出集越小说明我们的答案越精确。
 
 从上表中，我们可以得出结论：
 
 ::: conclusion 结论8.3
 通常，在面向对象语言的实践过程中：
+
 - 精度方面：
+
     - 对象敏感 > 类型敏感 > 调用点敏感
+
 - 效率方面：
+
     - 类型敏感 > 对象敏感 > 调用点敏感
 :::
 
 ## 8.5 自检问题
 
 1. 上下文敏感（Context Sensitivity, C.S.）是什么？
+
 2. 上下文敏感堆（C.S. Heap）是什么？
+
 3. 为什么 C.S. 和 C.S. Heap 能够提高分析精度？
+
 4. 上下文敏感的指针分析有哪些规则？
+
 5. 如何理解上下文敏感的指针分析算法（Algorithm for Context-sensitive Pointer Analysis）？
+
 6. 常见的上下文敏感性变体（Context Sensitivity Variants）有哪些？
+
 7. 常见的几种上下文变体之间的差别和联系是什么？
 

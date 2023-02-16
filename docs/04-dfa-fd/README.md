@@ -397,7 +397,9 @@ $$
 为了表示方便，我们下面用 $val(x)$ 来表示变量 $x$ 的值（可能是常数，UNDEF或者NAC），定义 $gen_s$ 如下：
 
 -  `s: x = c; //c is a constant` ，则 $gen_s = \{(x, c)\}$ ；
+
 -  `s: x = y;` ，则 $gen_s = \{(x, val(y))\}$ ；
+
 -  `s: x = y op z;` ，则 $gen_s = \{(x, f(y, z))\}$ ，其中， 
 
 $$

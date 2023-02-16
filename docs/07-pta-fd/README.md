@@ -2,7 +2,7 @@
 
 ## 7.1 指针分析的规则
 
-在上一讲的最后，我们提到了Java中的5类指针影响型语句（见6.4.2，注：6表示第6讲）。在这一讲的前3大部分中，我们会重点聚焦于创建、赋值、存储、载入这四种，也就是说，我们会先从过程内分析开始做起；最后第4部分里面，我们会引入调用语句，学习全程序的指针分析。
+在上一讲的最后，我们提到了Java中的 5 类指针影响型语句（见6.4.2）。在这一讲的前 3 大部分中，我们会重点聚焦于创建、赋值、存储、载入这四种，也就是说，我们会先从过程内分析开始做起；最后第 4 部分里面，我们会引入调用语句，学习全程序的指针分析。
 
 ### 7.1.1 定义和记号
 
@@ -69,7 +69,7 @@ $$
 |存储|`x.f = y`| $\underline{o_i \in pt(x), o_j\in pt(y)}$<br/>$o_j \in pt(o_i.f)$ |<img src="./store.png" alt="store" style="zoom:30%;"/>|
 |载入|`y = x.f`| $\underline{o_i\in pt(x), o_j\in pt(o_i.f)}$<br/>$o_j\in pt(y)$ |<img src="./load.png" alt="load" style="zoom:30%;"/>|
 
-其中，图示用红色虚线表示作为前提的指向关系，用黑色实线表示结论得出的指向关系。
+> 其中，图示用红色虚线表示作为前提的指向关系，用黑色实线表示结论得出的指向关系。
 
 ## 7.2 如何实现指针分析
 
@@ -86,7 +86,9 @@ $$
 实现指针分析的关键是当 $pt(x)$ 改变的时候，将改变的部分传递给和 $x$ 相关的其他指针。
 
 因此，我们的解决方案是：
+
 - 使用一个图来连接相关的指针；
+
 - 当 $pt(x)$ 改变的时候，将改变的部分传递给 $x$ 的后继们。
 
 ### 7.2.2 指针流图
@@ -121,12 +123,14 @@ PFG的节点是容易确定的，就是程序中所有的指针；于是，我�
 如果程序中有这样一句语句： `j: b = new T()` ，显然有 $pt(b) = \{o_j\}$ ，根据PFG，也会有 $pt(a) = \{o_j\}$ ， $pt(o_i.f) = \{o_j\}$ ， $pt(e) = \{o_j\}$ 。
 
 所以，指针分析的实现可以分两步：
-- 构建指针流图PFG
-- 在PFG上传递指向信息
 
-但是，上面这两步是没有严格的依赖关系的。考虑存储语句和载入语句（即上面例子中的2、4、5行），一个指针是没有字段的，当我们通过指针来访问字段的时候，其实访问的是指针指向的对象的字段，也就是说，图中的2、4、5这3条边的构建就已经使用到了 $o_i \in pt(c)$ 和 $o_i \in pt(d)$ 这两条指向信息了。
+- 构建指针流图 PFG
 
-因此，我们发现，构建指针流图是需要用到指向信息的，而传递指向信息有需要指针流图的基础，因此上面所说的两步是相互依赖（Mutually Dependent）的。
+- 在 PFG 上传递指向信息
+
+但是，上面这两步是没有严格的先后关系的。考虑存储语句和载入语句（即上面例子中的2、4、5行），一个指针是没有字段的，当我们通过指针来访问字段的时候，其实访问的是指针指向的对象的字段，也就是说，图中的2、4、5这3条边的构建就已经使用到了 $o_i \in pt(c)$ 和 $o_i \in pt(d)$ 这两条指向信息了。
+
+因此，我们发现，构建指针流图是需要用到指向信息的，而传递指向信息又需要指针流图的基础，因此上面所说的两步是相互依赖（Mutually Dependent）的。
 
 总结一下就是：
 
@@ -138,66 +142,11 @@ PFG的节点是容易确定的，就是程序中所有的指针；于是，我�
 
 ### 7.3.1 算法内容
 
-**算法7.1** 过程内上下文不敏感的全程序指针分析算法
+::: algorithm 算法7.1 过程内上下文不敏感的全程序指针分析算法
 
-![pta-intra-alg](./pta-intra-alg.png)
+<iframe src="/pseudocode/07-pta-fd/intra-pta.html" frameborder="no" marginwidth="0" width="100%" height="1050px" marginheight="0" scrolling="auto"></iframe>
 
-<!--
-    \begin{algorithm}
-    \caption{Intraprocedural Context-Insensitive Whole-Program Pointer Analysis}
-    \begin{algorithmic}
-    \INPUT Set of statements of the input program $S$.
-    \OUTPUT Pointer flow graph $PFG$ and point-to set of each pointer $x$ denoted by $pt(x)$.
-    \STATE $WL := []$ \COMMENT{work list, initialized as empty}
-    \STATE $PFG := \{\}$ \COMMENT{pointer flow graph, initialized as empty}
-    \FOR{\textbf{each} pointer $x \in S$}
-        \STATE $pt(x) := \{\}$ \COMMENT{point-to set of each pointer, initialized as empty}
-    \ENDFOR
-    \STATE
-    \PROCEDURE{Solve}{$S$} \COMMENT{main algorithm}
-        \FOR{\textbf{each} $i:x = new\ T() \in S$}
-            \STATE add $(x, \{o_i\})$ to $WL$
-        \ENDFOR
-        \FOR{\textbf{each} $x = y \in S$}
-            \STATE \CALL{AddEdge}{$y, x$}
-        \ENDFOR
-        \WHILE{$WL$ \textbf{is not} empty}
-            \STATE remove $(n, pts)$ from $WL$
-            \STATE $\Delta := pts - pt(n)$
-            \STATE \CALL{Propagate}{$n, \Delta$}
-            \IF{$n$ represents a variable $x$}
-                \FOR{\textbf{each} $o_i \in \Delta$}
-                    \FOR{\textbf{each} $x.f = y \in S$}
-                        \STATE \CALL{AddEdge}{$y, o_i.f$}
-                    \ENDFOR
-                    \FOR{\textbf{each} $y = x.f \in S$}
-                        \STATE \CALL{AddEdge}{$o_i.f, y$}
-                    \ENDFOR
-                \ENDFOR
-            \ENDIF
-        \ENDWHILE
-    \ENDPROCEDURE
-    \STATE
-    \PROCEDURE{AddEdge}{$s, t$}
-        \IF{$s \to t \notin PFG$}
-            \STATE add $s \to t$ to $PFG$
-            \IF{$pt(s)$ \textbf{is not} empty}
-                \STATE add $(t, pt(s))$ to $WL$
-            \ENDIF
-        \ENDIF
-    \ENDPROCEDURE
-    \STATE
-    \PROCEDURE{Propagate}{$n, pts$}
-        \IF{$pts$ \textbf{is not} empty}
-            \STATE $pt(n) = pt(n) \cup pts$
-            \FOR{\textbf{each} $n\to s\in PFG$}
-                \STATE add $(s, pts)$ to $WL$
-            \ENDFOR
-        \ENDIF
-    \ENDPROCEDURE
-    \end{algorithmic}
-    \end{algorithm}
--->
+:::
 
 ### 7.3.2 算法分析
 
@@ -213,27 +162,35 @@ $$WL \subseteq Pointer \times P(O)$$
 
 #### 处理 `New` 和 `Assign`
 
-算法的第7-10行是对创建语句和赋值语句的处理。创建语句的规则是无条件的，所以它们是我们算法指向关系的初始状态。赋值语句是最简单的PFG边，在添加边的子过程中（算法第22-26行），我们主要做了3个步骤：
-1. 如果 $s\to t$ 已经在PFG中为空，则啥也不干，避免冗余操作（第23行）
-2. 添加PFG边（第24行）
-3. 保证每个 $s$ 指向的对象也被 $t$ 指向（第25-26行）
+算法的第 8 - 13 行是对创建语句和赋值语句的处理。创建语句的规则是无条件的，所以它们是我们算法指向关系的初始状态。赋值语句是最简单的 PFG 边，在添加边的子过程中（算法第 31 - 38 行），我们主要做了 3 个步骤：
 
-在算法的第11-14行是对于工作列表中的表项的处理，后面15-20行是对于 `Store` 和 `Load` 的处理，我们这里暂时不考虑。
+1. 如果 $s\to t$ 已经在 PFG 中，则啥也不干，避免冗余操作（第 32 行）
 
-对于工作列表中的每个表项，我们将其取出（第12行），然后取 $pts$ 中还不在 $pt(n)$ 里面的那部分对象集合（第13行），这是为了避免冗余的操作，然后通过子过程 $Propagate(n,\Delta)$ 将 $\Delta$ 传播给 $n$ 及其后继。
+2. 添加 PFG 边（第 33 行）
 
-在第28-32的传播子过程，我们主要干了下面3个步骤：
-1. 如果 $pts$ 是空集，则啥也不干，因为空集就没必要向后传播了（第29行）
-2. 将 $pts$ 传播给 $n$ 的指向集合 $pt(n)$（第30行）
-3. 将 $pts$ （改变的部分，因为我们第14行传入的参数是 $\Delta$ ） 传播给 $n$ 在PFG上的后继结点（第31-32行）。
+3. 保证每个 $s$ 指向的对象也被 $t$ 指向（第 34 - 36 行）
+
+在算法的第 14 - 17 行是对于工作列表中的表项的处理，后面 18 - 27 行是对于 `Store` 和 `Load` 的处理，我们这里暂时不考虑。
+
+对于工作列表中的每个表项，我们将其取出（第 15 行），然后取 $pts$ 中还不在 $pt(n)$ 里面的那部分对象集合（第 16 行），这是为了避免冗余的操作，然后通过子过程 $Propagate(n, \Delta)$ 将 $\Delta$ 传播给 $n$ 及其后继。
+
+在第 40 - 47 行的传播子过程，我们主要干了下面 3 个步骤：
+
+1. 如果 $pts$ 是空集，则啥也不干，因为空集就没必要向后传播了（第 41 行）
+
+2. 将 $pts$ 传播给 $n$ 的指向集合 $pt(n)$（第 42 行）
+
+3. 将 $pts$ 传播给 $n$ 在 PFG 上的后继结点（第 43 - 45 行）。
+
+> 这里的 $pts$ 是在原来的指向集合基础上新增的对象集合，因为我们第 17 行传入的参数是 $\Delta$ 。
 
 #### 差量传播
 
 ::: definition 定义7.6
-称算法7.1第13-14行避免处理和传播冗余指向信息的做法为 **差量传播（Differential Propagation）** 。
+称算法7.1第 16 - 17 行避免处理和传播冗余指向信息的做法为 **差量传播（Differential Propagation）** 。
 :::
 
-使用差量传播的原因是算法的过程保证了现存于 $p(n)$ 中的指向信息已经会被传播给 $n$ 的后继了，也就不需要再次被传播了。
+使用差量传播的原因是算法的过程保证了现存于 $p(n)$ 中的指向信息已经被传播给 $n$ 的后继了，也就不需要再次被传播了。
 
 实际上，和已有的指向集合相比， $\Delta$ 通常是很小的，所以仅仅传播新的指向信息 $\Delta$ 能够极大地提升效率。
 
@@ -241,9 +198,9 @@ $$WL \subseteq Pointer \times P(O)$$
 
 #### 处理 `Store` 和 `Load`
 
-在算法7.1的第15-20行，我们处理了 `Store` 和 `Load` 语句，这两种语句的指针流是会受已知的指向关系的影响的，新的指向关系可能会在这两种语句的作用下引入新的PFG边
+在算法7.1的第 18 - 27 行，我们处理了 `Store` 和 `Load` 语句，这两种语句的指针流是会受已知的指向关系的影响的，新的指向关系可能会在这两种语句的作用下引入新的PFG边
 
-因为我们是基于3地址码的IR讨论的指针分析，所以不存在实例域的潜逃访问，也就是说我们只会通过变量访问实例域（详见6.4.2），因此才有了第15行的判断，可以避免后续冗余的处理（如果 $n$ 是一个实例字段，则不会存在关于 $n$ 的 `Store` 和 `load` 语句）。
+因为我们是基于3地址码的IR讨论的指针分析，所以不存在实例域的嵌套访问，也就是说我们只会通过变量访问实例域（详见6.4.2），因此才有了第 18 行的判断，可以避免后续冗余的处理（如果 $n$ 是一个实例字段，则不会存在关于 $n$ 的 `Store` 和 `Load` 语句）。
 
 具体的处理很简单，对于所有指向集中新增的对象，更新和这个变量相关 `Store` 和 `Load` 语句产生的PFG边。
 
@@ -278,7 +235,7 @@ e = d.f;
 基于指针分析来构建调用图的过程中，反过来又会促进指针分析的过程，因为调用边和返回边也是会传递指向关系的，从而两者是相互依赖的，我们称这种调用图的构建方式为即时调用图构建（On-the-fly Call Graph Construction）。
 
 ::: definition 定义7.7
-称边使用调用图，边构建调用图的方式为**即时调用图构建（On-the-fly Call Graph Construction）**。
+称一边使用调用图，一边构建调用图的方式为**即时调用图构建（On-the-fly Call Graph Construction）**。
 :::
 
 ### 7.4.2 调用语句的规则
@@ -288,9 +245,12 @@ e = d.f;
 |调用|`l: r = x.k(a1, ..., an)`|$o_i\in pt(x), m=Dispatch(o_i, k)$<br/>$o_u\in pt(a_j), 1\le j\le n$<br/>$o_v\in pt(m_{ret})$<br/>$\overline{o_i\in pt(m_{this})}$<br/>$o_u\in pt(m_{p_j}), 1\le j\le n$<br/>$o_v\in pt(r)$|$a_1\to m_{p_1}$<br/>... ...<br/>$a_n\to m_{p_n}$<br/>$m_{ret}\to r$|
 
 其中，
-- $Dispatch(o_i, k)$ 是根据对象 $o_i$ 的类型来做虚方法 $k$ 的派发，从而准确的找到对象 $o_i$ 对应的目标方法。这个方法派发是绝对精确的，因为Dispatch算法是对运行时的模拟。这里影响精度的因素只有变量 $x$ 的指向集合内可能有不止一个指向对象。
+- $Dispatch(o_i, k)$ 是根据对象 $o_i$ 的类型来做虚方法 $k$ 的派发（详见算法5.1），从而准确的找到对象 $o_i$ 对应的目标方法。这个方法派发是绝对精确的，因为Dispatch算法是对运行时的模拟。这里影响精度的因素只会是变量 $x$ 的指向集合内可能有不止一个指向对象。
+
 - $m_{this}$ 是 $m$ 方法对应的 $this$ 变量；
+
 - $m_{p_j}$ 是 $m$ 方法的第 $j$ 个形参；
+
 - $m_{ret}$ 是存放 $m$ 方法返回值的变量。
 
 比如说下面的例子：我们会建立3条PFG边，并且将 $o_i$ 赋给 `this` 。
@@ -299,7 +259,7 @@ e = d.f;
 
 这里需要再解释一下的问题是，我们为什么不添加 $x\to this$ 作为一条 PFG 边？
 
-接收对象（Receiver Object）只应当流到对应目标方法的 `this` 变量中。比如说，如果 `x` 的指向集合里面有T类型的 $o_i$ ，以及C类型的 $o_j$ ，那么我们处理调用的时候，应当把 $o_i$ 赋给T类中的 `foo` 方法的 `this` 变量，把 $o_j$ 赋给C类中的 `foo` 方法的 `this` 变量。
+接收对象（Receiver Object）只应当流到对应目标方法的 `this` 变量中。比如说，如果 `x` 的指向集合里面有 T 类型的 $o_i$ ，以及 C 类型的 $o_j$ ，那么我们处理调用的时候，应当把 $o_i$ 赋给T类中的 `foo` 方法的 `this` 变量，把 $o_j$ 赋给 C 类中的 `foo` 方法的 `this` 变量。
 
 如果我们在 `x` 和 `this` 之间建立了 `PFG` 边，那么 `x` 指向集中的所有对象都会流到 `this` 中，这会导致一个父类的对象流到子类的方法中，或者子类的对象流到父类的方法中（假设子类中存在目标实例方法），这是错误的，为 `this` 变量增加了虚假的指向关系，因此我们不添加 $x\to this$ 作为PFG边。
 
@@ -308,8 +268,11 @@ e = d.f;
 过程间的指针分析是和调用图的构建一起进行的，也就是说，指针分析和调用图构建之间就像指针分析和指针流图构建之间一样，是相互依赖的。
 
 调用图向我们描述了一个”可达的世界”：
+
 - 入口方法（比如说 `main` 方法）是一开始就可达的；
+
 - 其他的可达方法是在分析的过程中不断发现的；
+
 - 只有可达的方法和语句才会被分析。
 
 ::: definition 定义7.8
@@ -326,93 +289,37 @@ e = d.f;
 
 #### 算法内容
 
-**算法7.2** 过程间上下文不敏感的全程序指针分析算法
+::: algorithm 算法7.2 过程间上下文不敏感的全程序指针分析算法
 
-![pta-inter-alg](./pta-inter-alg.png)
-
-<!--
-    \begin{algorithm}
-    \caption{Interprocedural Context-Insensitive Whole-Program Pointer Analysis}
-    \begin{algorithmic}
-    \INPUT Entry method $m^{entry}$.
-    \OUTPUT Pointer flow graph $PFG$ and point-to set of $pt(x)$ and call graph $CG$.
-    \STATE $WL := []$ \COMMENT{work list, initialized as empty}
-    \STATE $PFG := \{\}$ \COMMENT{pointer flow graph, initialized as empty}
-    \STATE $S := \{\}$ \COMMENT{set of reachable statements, initialized as empty}
-    \STATE $RM := \{\}$ \COMMENT{set of reachable methods, initialized as empty}
-    \STATE $CG := \{\}$ \COMMENT{call graph, initialized as empty}
-    \STATE
-    \PROCEDURE{Solve}{$m^{entry}$} \COMMENT{main algorithm}
-        \STATE \CALL{AddReachable}{$m^{entry}$}
-        \WHILE{$WL$ \textbf{is not} empty}
-            \STATE remove $(n, pts)$ from $WL$
-            \STATE $\Delta := pts - pt(n)$
-            \STATE \CALL{Propagate}{$n, \Delta$}
-            \IF{$n$ represents a variable $x$}
-                \FOR{\textbf{each} $o_i \in \Delta$}
-                    \FOR{\textbf{each} $x.f = y \in S$}
-                        \STATE \CALL{AddEdge}{$y, o_i.f$}
-                    \ENDFOR
-                    \FOR{\textbf{each} $y = x.f \in S$}
-                        \STATE \CALL{AddEdge}{$o_i.f, y$}
-                    \ENDFOR
-                    \STATE \CALL{ProcessCall}{$x, o_i$}
-                \ENDFOR
-            \ENDIF
-        \ENDWHILE
-    \ENDPROCEDURE
-    \STATE
-    \PROCEDURE{AddReachable}{$m$}
-        \IF{$m \notin RM$}
-            \STATE add $m$ to $RM$
-            \STATE $S = S \cup S_{m}$ \COMMENT{$S_m$ is the set of statements in method $m$.}
-            \FOR{\textbf{each} pointer $x \in S_{m}$}
-                \STATE $pt(x) := \{\}$ \COMMENT{poinrt-to set of each pointer, initialized as empty}
-            \ENDFOR
-            \FOR{\textbf{each} $i:x=new\ T()\in S_{m}$}
-                \STATE add $(x, \{o_i\})$ to $WL$
-            \ENDFOR
-            \FOR{\textbf{each} $x=y\in S_{m}$}
-                \STATE \CALL{AddEdge}{$y, x$}
-            \ENDFOR
-        \ENDIF
-    \ENDPROCEDURE
-    \STATE
-    \PROCEDURE{ProcessCall}{$x, o_i$}
-        \FOR{\textbf{each} $l: r = x.k(a_1, ..., a_n) \in S$}
-            \STATE $m :=$ \CALL{Dispatch}{$o_i, k$}
-            \STATE add $(m_{this}, \{o_i\})$ to $WL$
-            \IF{$l \to m \notin CG$}
-                \STATE add $l \to m$ to $CG$
-                \STATE \CALL{AddReachable}{$m$}
-                \FOR{\textbf{each} parameter $p_i$ \textbf{of} $m$}
-                    \STATE \CALL{AddEdge}{$a_i, p_i$}
-                \ENDFOR
-                \STATE \CALL{AddEdge}{$m_{ret}, r$}
-            \ENDIF
-        \ENDFOR
-    \ENDPROCEDURE
-    \end{algorithmic}
-    \end{algorithm}
--->
+<iframe src="/pseudocode/07-pta-fd/inter-pta.html" frameborder="no" marginwidth="0" width="100%" height="1230px" marginheight="0" scrolling="auto"></iframe>
 
 其中， `Propagate` 和 `AddEdge` 子过程同算法7.1，`Dispatch` 过程见算法5.1。
 
+:::
 
 #### 算法分析
 
-算法第21-30行的 `AddReachable(m)` 子过程是的作用是拓展可达调用子图，分为两步：
-1. 添加新的可达的方法和语句（算法第22-24行）
-2. 为新发现的语句更新工作表和指针流图（算法第25-30行）
+算法第 27 - 41 行的 `AddReachable(m)` 子过程是的作用是拓展可达调用子图，分为两步：
+
+1. 添加新的可达的方法和语句（算法第 28 - 30 行）
+
+2. 为新发现的语句更新工作表和指针流图（算法第 31 - 39 行）
 
 这个子过程会在两种情况下被调用：
-- 一开始的时候对入口方法调用（算法第8行）
-- 当新的调用边被发现的时候对（算法第36-38行）
 
-这个算法中另一个新的子过程是算法32-41行的 `ProcessCall(x, o_i)` ，它的主要作用就是实现7.4.2（第7讲，即本讲的4.2节）中的调用规则，基本步骤为：
-1. 根据接收对象类型以及调用点处的方法签名作方法派发（第33-34行）
-2. 即时（on-the-fly）构建调用图（第36-38行）
-3. 传递参数和返回值（第39-41行）
+- 一开始的时候对入口方法调用（算法第8行）
+
+- 当新的调用边被发现的时候对被发现的新方法调用（算法第 47 - 49 行）
+
+这个算法中另一个新的子过程是算法 43 - 56 行的 `ProcessCall(x, o_i)` ，它的主要作用就是实现 7.4.2 中的调用规则，基本步骤为：
+
+1. 根据接收对象类型以及调用点处的方法签名作方法派发（第 44 - 45 行）
+
+2. 为目标方法的 $this$ 变量添加新的指向关系（第 46 行）
+
+3. 对新发现的目标方法即时（on-the-fly）构建调用图（第 47 - 49 行）
+
+4. 为新发现的目标方法建立传递参数和返回值的 PFG 边（第 50 - 53 行）
 
 #### 实例
 
@@ -442,9 +349,14 @@ class B extends A {
 ## 7.5 自检问题
 
 1. 指针分析的规则（Pointer Analysis Rules）是什么？
+
 2. 如何理解指针流图（Pointer Flow Graph）？
+
 3. 指针分析算法（Pointer Analysis Algorithms）的基本过程是什么？
+
 4. 如何理解方法调用（Method Call）中指针分析的规则？
+
 5. 怎样理解过程间的指针分析算法（Inter-procedural Pointer Analysis Algorithm）？
+
 6. 即时调用图构建（On-the-fly Call Graph Construction）的含义是什么？
 
