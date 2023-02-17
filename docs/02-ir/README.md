@@ -14,15 +14,11 @@
 
 -  **类型检查器（Type Checker）** 会遍历抽象语法树，进行语义分析（Semantic Analysis），不过编译器的语意分析是简单的，主要是分析属性语法（Attribute Grammer），比如说变量类型，并适当调整一下语法树。语义分析的结果我们称之为装饰过的抽象语法树（Decorated AST）。 
 
--  **翻译器（Translator）** 会讲抽象语法树翻译成中间表示（Intermediate Representation, IR），其中，IR和机器语言之间往往有着一一对应的关系。 
+-  **翻译器（Translator）** 会将抽象语法树翻译成中间表示（Intermediate Representation, IR），IR 的出现解耦了编译器的机器相关（Machine Dependent）部分和机器无关（Machine Independent）部分，上述几个层次在不同架构的机器上面是可以几乎不加改动地复用的。
 
-    - 如果是Java的话，IR就是能够被JVM识别执行的指令序列；如果是C/C++的话，IR其实就是汇编语言，而汇编语言本质上也就是CPU能够识别的指令序列。JVM只是在物理CPU的基础上搭建了一个抽象层的虚拟CPU。
+-  **机器码生成器（Code Generator）** 会将 IR 转化成物理 CPU 能够直接执行的比特序列，这个过程是机器相关的。
 
--  **机器码生成器（Code Generator）** 会讲IR转化成物理CPU能够直接执行的比特序列。 
-   
-   - 如果是Java的话，这个工作是由Java解释器完成的，如果是C/C++的话，这个工作是由当前系统架构下的汇编器（Assember）完成的。
-
-而静态分析通常发生在IR这一层次，即刚好可以运行但是还没有运行的时候，这也是我们作代码优化的一个层次。
+而静态分析通常发生在 IR 这一层次，这也是我们作代码的机器无关优化的一个层次。
 
 ### 2.1.2 抽象语法树和中间表示的对比
 
