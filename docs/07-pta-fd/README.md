@@ -360,3 +360,7 @@ class B extends A {
 
 6. 即时调用图构建（On-the-fly Call Graph Construction）的含义是什么？
 
+::: tip 作业布置
+到此为止，读者已经具备了完成[作业 5：非上下文敏感指针分析](https://tai-e.pascal-lab.net/pa5.html)所需的全部理论知识。
+:::
+

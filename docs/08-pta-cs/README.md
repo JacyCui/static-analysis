@@ -549,3 +549,7 @@ Selective Context Sensitivity for Pointer Analysis”. TOPLAS 2020.
 
 7. 常见的几种上下文变体之间的差别和联系是什么？
 
+::: tip 作业布置
+到此为止，读者已经具备了完成[作业 6：上下文敏感指针分析](https://tai-e.pascal-lab.net/pa6.html)以及[作业 7：Alias-Aware 的过程间常量传播](https://tai-e.pascal-lab.net/pa7.html)所需的全部理论知识。
+:::
+

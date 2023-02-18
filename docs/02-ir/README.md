@@ -238,6 +238,7 @@ $$
 如果 $(b_i, b_j)\in E_0$ ，我们称 $b_i$ 是 $b_j$ 的 **前驱（Predecessor）** ， $b_j$ 是 $b_i$ 的 **后继（Successor）** 。
 
 - 对于图 $CFG_0$ 中所有入度为0的点（一般只有一个），考虑虚拟结点 **入口（Entry）** ，所有的 **入度（In Degree）** 为0的点都是Entry的后继；
+
 - 对于图 $CFG_0$ 中所有出度为0的点（可能不止一个），考虑虚拟结点 **出口（Exit）** ，所有的 **出度（Out Degree）** 为0的点都是Exit的前驱。
 
 记 $E_1 = \{(Entry, b) | b \in B \wedge inDegree(b) = 0\},E_2 = \{(b, Exit) | b \in B \wedge outDegree(b) = 0\}$ 则我们可以定义 **控制流图（Control Flow Graph）** 为 $CFG = (V, E)$ ，其中 

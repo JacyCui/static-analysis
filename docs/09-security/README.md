@@ -399,3 +399,6 @@ class A {
 
 4. 如何使用污点分析（Taint Analysis）来检测不想要的信息流？
 
+::: tip 作业布置
+到此为止，读者已经具备了完成[作业 8：污点分析](https://tai-e.pascal-lab.net/pa8.html)所需的全部理论知识。
+:::

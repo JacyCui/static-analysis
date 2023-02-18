@@ -444,3 +444,6 @@ CFG边中从调用点到对应返回点的边称为**调用-返回边（Call-to-
 
 4. 如何进行过程间常量传播（Interprocedural Constant Propagation）分析？
 
+::: tip 作业布置
+到此为止，读者已经具备了完成[作业 4：类层次结构分析与过程间常量传播](https://tai-e.pascal-lab.net/pa4.html)所需的全部理论知识。
+:::

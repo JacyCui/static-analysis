@@ -456,3 +456,6 @@ $$F(X) \wedge F(Y) = \{(a, NAC), (b, NAC), (c, 10)\}$$
 
 7. 数据流分析的工作表算法（Worklist Algorithm）是什么？
 
+::: tip 作业布置
+到此为止，读者已经具备了完成[作业 2：常量传播和 Worklist 求解器](https://tai-e.pascal-lab.net/pa2.html)以及[作业 3：死代码检测](https://tai-e.pascal-lab.net/pa3.html)所需的全部理论知识。
+:::
