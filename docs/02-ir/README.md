@@ -207,17 +207,13 @@ $$
 
 ::: algorithm 算法2.1 基于中间表示的基块构建算法
 
-<iframe src="/pseudocode/02-ir/build-basic-block.html" frameborder="no" marginwidth="0" width="100%" height="480px" marginheight="0" scrolling="auto"></iframe>
+<iframe src="/pseudocode/02-ir/build-basic-block.html" frameborder="no" marginwidth="0" width="100%" height="535px" marginheight="0" scrolling="auto"></iframe>
 
 :::
 
-算法的时间复杂度为最坏为 $O(n\log n)$ ，当 $k\log k < n$ 时，时间复杂度为 $O(n)$ 。
+算法的时间复杂度为 $O(n)$ 。
 
-Leader最好能够按序找到，这样的话，算法复杂度可以优化到 $O(n)$ 。不过我暂时没有想到很好的一次遍历就能够按序找到所有Leader的办法。
-
-我暂时的实现是用一次遍历乱序找到所有的Leader，然后手动排序（基于比较的排序至少需要 $O(n\log n)$ ）、去重（基于有序性用双指针去重只需要 $O(n)$ ），整体的复杂度取决于排序的 $O(n\log n)$ 。
-
-不过这个复杂度是最坏估计，如果 $k\log k < n$ 的话，也就是说程序中并不是十分频繁的跳转，复杂度还是在$O(n)$量级的。
+在实际实现过程中，由于保证前$i$个指令的Leader数量不超过$i$个，因此在第二重循环中一定保证$k\le i$恒成立。因此，```IsLeader```和```L```可以合并使用，上述伪代码出于方便理解考量下未能如此实现。当然空间复杂度一样为 $O(n)$ 。
 
 
 ### 2.2.2 控制流图
@@ -263,16 +259,11 @@ $$
 
 ::: algorithm 算法2.2 基于基块的控制流图构建算法
 
-<iframe src="/pseudocode/02-ir/build-cfg.html" frameborder="no" marginwidth="0" width="100%" height="460px" marginheight="0" scrolling="auto"></iframe>
+<iframe src="/pseudocode/02-ir/build-cfg.html" frameborder="no" marginwidth="0" width="100%" height="340px" marginheight="0" scrolling="auto"></iframe>
 
 :::
 
-这是一个简单的暴力算法，它的时间复杂度为 $O(k^2)$ 。
-
-> 虽然上面的算法是一个暴力算法，但是对于稠密的图来说， $O(|V|^2) = O(|E|)$ ，由于我们后续还要对CFG进行处理，而正常的关于图的算法，其复杂度至少都是线性复杂度 $O(|V| + |E|)$ 。也就是说，可以“吸收”掉这里构建图的暴力复杂度。因此，这个蛮力的算法在图比较稠密的时候是不会造成整体静态分析复杂度的增加的。
-
-
-> 不过，当图比较稀疏的时候，这个暴力算法的表现就很糟糕了。不过这只是我偷懒直接写的暴力算法，读者可以自行设计更加高效的算法来构建CFG。在设计算法的时候可以假设 `first` 、 `last` 、 `type` 、 `target` 、 `next` 等属性的获取是常数项时间。
+这个算法的时间复杂度为 $O(k)$ 。
 
 其实，从计算机硬件的角度分析，程序的控制流体现在 **程序计数器（Program Counter, PC）** 的增减上。
 每一种架构的CPU都会有PC，比如说x86的CPU用EIP（Extended Instruction Pointer）作为PC，RISCV的CPU用IR（Instruction Registor）作为PC，JVM应该也应该有对应的PC存在。
