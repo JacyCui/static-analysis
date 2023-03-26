@@ -17,20 +17,22 @@
         \INPUT IR 表示下的指令序列 $P[1..n]$.
         \OUTPUT 所有的基块.
         \STATE Let $L[1..n]$ be a new array. \COMMENT{$L[1..n]$ 用来存放所有的Leader的下标}
-        \STATE $k := 1$ \COMMENT{$k$ 用来记录Leader的个数}
-        \STATE $L[k] = 1$ \COMMENT{$P[1]$ 是Leader}
+        \STATE Let $IsLearder[1..n]$ be a new array. \COMMENT{$IsLearder[1..n]$ 用来表示第$i$条指令是否为Leader,初始化为false}
+        \STATE $IsLearder[1]=true$ \COMMENT{根据定义2.3， $1$ 号结点一定是Leader}
         \FOR{$i = 2$ \TO $n$}
             \IF{the type of $P[i]$ is jump}
                 \STATE \COMMENT{根据定理2.1寻找Leader}
-                \STATE $L[k+1] = target(P[i])$ \COMMENT{$target(x) \to$ 跳转指令x的目标指令的序号}
-                \STATE $L[k+2] = i + 1$
-                \STATE $k = k + 2$
+                \STATE $IsLeader[ target(P[i]) ]=true$ \COMMENT{$target(x) \to$ 跳转指令x的目标指令的序号}
+                \STATE $IsLeader[ i + 1 ]=true$
             \ENDIF
         \ENDFOR
-        \STATE \CALL{Sort}{$L[1..k]$} \COMMENT{将所有的Leader从小到大排序, 需要 $O(k\log k)$}
-        \STATE $k =$ \CALL{RemoveDuplicates}{$L[1..k]$}
-        \STATE \COMMENT{将Leader的下标去重, 排序后的去重只需要 $O(n)$ , 返回不重复的Leader个数}
-        \STATE $L[k+1] = n + 1$
+        \STATE $k = 0$ \COMMENT{$k$为Leader的数量}
+        \FOR{$i = 1$ \TO $n$}
+            \IF{ IsLeader[i] }
+                \STATE $L[k+1]=i$
+                \STATE $k=k + 1$
+            \ENDIF
+        \ENDFOR
         \STATE \COMMENT{根据定理2.2输出Basic Block}
         \FOR{$i = 1$ \TO $k$}
             \STATE \textbf{output} $P[L[i]..L[i+1]-1]$
