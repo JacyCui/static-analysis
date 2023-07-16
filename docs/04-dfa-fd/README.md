@@ -406,6 +406,8 @@ $$
 f(y,z) = \begin{cases}val(y)\ op\ val(z)\quad if\ y\ and\ z\ are\ constants\\ NAC\quad if\ y\ or\ z\ is NAC\\ UNDEF\quad otherwise\end{cases}
 $$
 
+> 关于上述第二种情况，我们认为 $NAC/0$ 和 $NAC \bmod 0$ 的结果为 $UNDEF$ ，当然这对常量优化来说并不重要。
+
 如果 $s$ 不是赋值语句，那么 $F: OUT[s] = IN[s]$ （Identity Function）。
 
 ### 4.6.3 区别
