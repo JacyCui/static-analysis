@@ -112,7 +112,7 @@ module.exports = {
                     }                    
                 ]
             },
-            { text: '配套实验', link: 'https://tai-e.pascal-lab.net/'}
+            { text: '配套实验', link: 'https://tai-e.pascal-lab.net/intro/overview.html'}
         ],
         repo: 'JacyCui/static-analysis', // 文档项目的github仓库
 
