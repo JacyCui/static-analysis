@@ -10,7 +10,7 @@ features: # 特点介绍
 - title: 内容全面
   details: 涵盖一个自顶向下，然后又自底向上的完整的基础静态分析知识体系。
 - title: 结构严谨
-  details: 基于集合论与数理逻辑来阐释关键概念与性质，保持前后数学记号上的连贯性。
+  details: 基于集合论与数理逻辑来阐释关键概念与性质，保持前后记号和术语上的连贯性和一致性。
 - title: 通俗易懂
   details: 由于本身就是笔者从学生视角作的笔记形成的教程，对初学者更加友好。
 # footer: MIT Licensed | Copyright © 2018-present Evan You # 页脚

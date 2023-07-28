@@ -17,8 +17,8 @@
         \INPUT IR 表示下的指令序列 $P[1..n]$.
         \OUTPUT 所有的基块.
         \STATE Let $L[1..n]$ be a new array. \COMMENT{$L[1..n]$ 用来存放所有的Leader的下标}
-        \STATE Let $IsLearder[1..n]$ be a new array. \COMMENT{$IsLearder[1..n]$ 用来表示第$i$条指令是否为Leader,初始化为false}
-        \STATE $IsLearder[1]=true$ \COMMENT{根据定义2.3， $1$ 号结点一定是Leader}
+        \STATE Let $IsLeader[1..n]$ be a new array. \COMMENT{$IsLeader[1..n]$ 用来表示第$i$条指令是否为Leader,初始化为false}
+        \STATE $IsLeader[1]=true$ \COMMENT{根据定义2.3， $1$ 号结点一定是Leader}
         \FOR{$i = 2$ \TO $n$}
             \IF{the type of $P[i]$ is jump}
                 \STATE \COMMENT{根据定理2.1寻找Leader}
