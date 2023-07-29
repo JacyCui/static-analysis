@@ -22,7 +22,7 @@
                 \STATE Let $targetBlock$ be the basic block containing $targetStmt$.
                 \STATE \textbf{output} $b\to targetBlock$
             \ENDIF
-            \IF{$B[i].last.type \ne$ UCONDITIONAL-JUMP }
+            \IF{$b.last.type \ne$ UCONDITIONAL-JUMP }
                 \STATE $nextStmt = b.last.next$ 
                 \STATE Let $nextBlock$ be the basic block containing $nextStmt$.
                 \STATE \textbf{output} $b\to nextBlock$
