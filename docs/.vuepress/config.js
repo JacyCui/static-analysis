@@ -107,7 +107,7 @@ module.exports = {
                         text: '第四部分：技术拓展',
                         items: [
                             {text: '11 CFL 可达与 IFDS', link: '/11-ifds/'},
-                            {text: '12 完整性与近似完整性', link: '/12-soundiness/'}
+                            {text: '12 完全性与近似完全性', link: '/12-soundiness/'}
                         ]
                     }                    
                 ]
