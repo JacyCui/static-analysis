@@ -138,7 +138,7 @@ output x;
 
 我们可以有两种 Sound 的静态分析：
 
-- 当 `input` 为 `true` ，`x` 为 `0` ，当 `input` 为 `false` ， `x` 为 `1` ；
+- 当 `input` 为 `true` ，`x` 为 `1` ，当 `input` 为 `false` ， `x` 为 `0` ；
 
 - `x` 为 `0` 或 `1`
 
