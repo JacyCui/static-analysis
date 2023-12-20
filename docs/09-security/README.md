@@ -69,11 +69,11 @@ broadcast(l); // l is low security
 
 ### 9.1.5 信息流政策
 
-::: definition 定义9.4 blue
+::: definition 定义9.4
 **信息流政策（Information Flow Policy）** 是指对于不同 **安全等级（Security Level）** 之间信息流动的限制。
 :::
 
-::: definition 定义9.5 blue
+::: definition 定义9.5
 **不介入政策（Noninterference Policy）** 是一种信息流政策，它要求高安全等级的变量的信息不应当作用于，或者说不应当干涉低安全等级变量的信息。
 :::
 
