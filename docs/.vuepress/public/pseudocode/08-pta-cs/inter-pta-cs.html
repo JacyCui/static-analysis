@@ -47,7 +47,7 @@
                 \STATE add $c:m$ to $RM$
                 \STATE $S = S \cup S_{m}$ \COMMENT{$S_m$ is the set of statements in method $m$.}
                 \FOR{\textbf{each} pointer $x \in S_{m}$}
-                    \STATE $pt(c:x) := \{\}$ \COMMENT{poinrt-to set of each context-sensitive pointer, initialized as empty}
+                    \STATE $pt(c:x) := \{\}$ \COMMENT{point-to set of each context-sensitive pointer, initialized as empty}
                 \ENDFOR
                 \FOR{\textbf{each} $i:x=new\ T()\in S_{m}$}
                     \STATE add $(c:x, \{c:o_i\})$ to $WL$
