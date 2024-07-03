@@ -230,7 +230,7 @@ int secret = getSecret();
 int publik = secret;
 ```
 
-这个现实流泄漏了32比特的信息。
+这个显式流泄漏了32比特的信息。
 
 ```java
 int secret = getSecret();
