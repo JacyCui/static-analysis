@@ -12,7 +12,7 @@
 
 ## 联系
 
-- 学生邮箱：201220014@smail.nju.edu.cn
+- 学生邮箱：jiacaicui@smail.nju.edu.cn
 
 - 个人邮箱：jiacaicui@163.com
 
