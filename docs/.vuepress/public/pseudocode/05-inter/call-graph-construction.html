@@ -21,7 +21,7 @@
             \STATE $CG = \{\}$ \COMMENT{Call Graph, a set of call edges}
             \STATE $RM = \{\}$ \COMMENT{A set of reachable methods}
             \WHILE{$WL$ \textbf{is} \NOT empty}
-                \STATE remove $m$ from $WL$ \COMMENT{$m$ is a method signature}
+                \STATE remove $m$ from $WL$ \COMMENT{$m$ is a method}
                 \IF{$m \notin RM$}
                     \STATE add $m$ to $RM$
                     \FOR{\textbf{each} call site $cs$ \textbf{in} $m$}
