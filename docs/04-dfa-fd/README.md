@@ -210,7 +210,7 @@ $$
 > 
 > $\forall x, y, z \in L$ ，若$x \preceq y$，由于 $x \preceq y \preceq y \vee z$ ， $z \preceq y \vee z$ ，于是有 $x \vee z \preceq y \vee z$ ，从而 $\vee$ 也是单调的。
 
-### 4.2.4 分配律
+### 4.2.4 分配性
 
 ::: theorem 定理4.8
 定义在格 $(L, \preceq)$ 上的单调函数 $f(x)$ 满足： $f(x) \vee f(y) \preceq f(x \vee y)$ ， $f(x \wedge y) \preceq f(x) \wedge f(y)$ 。
@@ -223,7 +223,7 @@ $$
 > 由 $x \wedge y \preceq x$ 且 $f(x)$ 单调，有 $f(x \wedge y) \preceq f(x)$ ，同理 $f(x \wedge y) \preceq f(y)$ ，于是 $f(x \wedge y) \preceq f(x) \wedge f(y)$ 。
 
 ::: definition 定义4.11
-我们称定义在格 $(L, \preceq)$上的函数 $f(x)$ 满足**分配律（Distributive）**，如果 $f(x \vee y) = f(x) \vee f(y)$ ， $f(x \wedge y) = f(x)\wedge f(y)$ 。
+我们称定义在格 $(L, \preceq)$上的函数 $f(x)$ 满足**分配性（Distributive）**，如果 $f(x \vee y) = f(x) \vee f(y)$ ， $f(x \wedge y) = f(x)\wedge f(y)$ 。
 :::
 
 ## 4.3 基于格的数据流分析框架
@@ -355,9 +355,9 @@ $$
 
 根据定理4.8，有 $F(x) \vee F(y) \preceq F(x\vee y)$ ，结合4.4.1（以May Analysis为例），迭代算法的精度不如MOP。
 
-不过，当 $F(x)$ 满足分配律的时候，迭代算法的精度和MOP是一样的。并且，目前我们学过的3中数据流分析的状态转移方程都是满足分配律的。也就是说，在这些情景下，迭代算法可以达到MOP算法的精度，但是其实现要比MOP简单得多。
+不过，当 $F(x)$ 满足分配性的时候，迭代算法的精度和MOP是一样的。并且，目前我们学过的3中数据流分析的状态转移方程都是满足分配性的。也就是说，在这些情景下，迭代算法可以达到MOP算法的精度，但是其实现要比MOP简单得多。
 
-其实，对于许多可以通过 $gen/kill$ 的视角解决的问题，它们的状态转移都是满足分配律的。不过也有一些问题的状态转移函数并不满足分配律，比如说4.6。
+其实，对于许多可以通过 $gen/kill$ 的视角解决的问题，它们的状态转移都是满足分配性的。不过也有一些问题的状态转移函数并不满足分配性，比如说4.6。
 
 ## 4.6 常量传播
 
@@ -412,7 +412,7 @@ $$
 
 ### 4.6.3 区别
 
-我们前面学的3种数据流分析，其转移方程都满足分配律，而常量传播的转移方程是不满足分配律的，我们可以用一个例子来看。
+我们前面学的3种数据流分析，其转移方程都满足分配性，而常量传播的转移方程是不满足分配性的，我们可以用一个例子来看。
 
 <p style="text-align:center"><img src="./cp-eg.jpg" alt="cp-eg" style="zoom:40%;"/></p>
 
@@ -424,7 +424,7 @@ $$F(X \wedge Y) = \{(a, NAC), (b, NAC), (c, NAC)\}$$
 
 $$F(X) \wedge F(Y) = \{(a, NAC), (b, NAC), (c, 10)\}$$
 
-虽然 $F(X \wedge Y) \preceq F(X) \wedge F(Y)$ ，与单调性是契合的；但是 $F(X \wedge Y) \ne F(X) \wedge F(Y)$ ，不满足分配律。
+虽然 $F(X \wedge Y) \preceq F(X) \wedge F(Y)$ ，与单调性是契合的；但是 $F(X \wedge Y) \ne F(X) \wedge F(Y)$ ，不满足分配性。
 
 因此，迭代算法的精度达不到MOP精度。
 
