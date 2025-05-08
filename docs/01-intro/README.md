@@ -10,13 +10,13 @@
 
 我们会关心的程序性质可能有：
 
-- 程序P是否会产生私有信息泄漏（Private Information Leak），或者说是否存在访问控制漏洞（Access Control Venerability）；
+- 程序P是否会产生私有信息泄漏（Private Information Leak），或者说是否存在访问控制漏洞（Access Control Vulnerability）；
 
 - 程序P是否有空指针的解引用(Null Pointer Dereference)操作，更一般的，是否会发生不可修复的运行时错误（Runtime Error）；
 
 - 程序P中的类型转换（Type Cast）是否都是安全的；
 
-- 程序P中是否存在可能无法满足的断言（Assersion Error）；
+- 程序P中是否存在可能无法满足的断言（Assertion Error）；
 
 - 程序P中是否存在死代码（Dead Code, 即控制流在任何情况下都无法到达的代码）；
 
