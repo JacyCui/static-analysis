@@ -103,7 +103,7 @@ $$
 ::: conclusion 结论3.2
 数据流分析就是要寻找一种解决方案（即结论3.1中的 $f_{PP\to D}$ ），对于程序 $P$ 中的所有语句 $s$ ，这种解决方案能够满足 $IN[s]$ 和 $OUT[s]$ 所需要满足的 **安全近似导向型约束（Safe-Approximation-Oriented Constraints, SAOC）** ，SAOC主要有两种：
 
-- 基于语句语意（Sematics of Statements）的约束，即由状态转移方程（见定义3.7）产生的约束；
+- 基于语句语义（Semantics of Statements）的约束，即由状态转移方程（见定义3.7）产生的约束；
 
 - 基于控制流（Flow of Control）的约束，即定理3.2所产生的约束。
 :::
@@ -410,13 +410,13 @@ $$
 
 ::: definition 定义3.14
 
-我们称一个表达式（Expression）`x op y`在程序点 $p$ 处是 **可用的（Avaliable）** ，如果：
+我们称一个表达式（Expression）`x op y`在程序点 $p$ 处是 **可用的（Available）** ，如果：
 
 -  **所有** 的从程序入口到程序点 $p$ 的路径都 **必须** 经过 `x op y` 表达式的评估（Evaluation），并且
 
 - 在最后一次 `x op y` 的评估之后，没有 $x$ 或者 $y$ 的重定义（Redefinition）。
 
-对于程序中每个程序点处的可用表达式的分析，我们称之为 **可用表达式分析（Avaliable Expression Analysis）** 。
+对于程序中每个程序点处的可用表达式的分析，我们称之为 **可用表达式分析（Available Expression Analysis）** 。
 
 :::
 
@@ -547,7 +547,7 @@ $$
 
 ## 3.6 自检问题
 
-1. 定义可达性（Reaching Definitions）分析、活跃变量（Live Variables）分析和可用表达式（Avaliable Expressions）分析分别是什么含义？
+1. 定义可达性（Reaching Definitions）分析、活跃变量（Live Variables）分析和可用表达式（Available Expressions）分析分别是什么含义？
 
 2. 上述三种数据流分析（Data Flow Analysis）有哪些不同点？又有什么相似的地方？
 

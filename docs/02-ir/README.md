@@ -10,9 +10,9 @@
 
 -  **扫描器（Scanner）** 扫描源代码，进行词法分析（Lexical Analysis）,词法分析会用到正则表达式（Regular Expression），词法分析后的结果为一个标记（Token）串。 
 
--  **解析器（Parser）** 遍历标记串，进行语法分析（Syntax Analysis），这里的语法分析分析的是上下文无关的语法（Context Free Grammer），解析器的内部应该是实现了一个有限状态机，用于识别和分析每个语法块格式的正确性，语法分析的结果为一棵抽象语法树（Abstract Syntax Tree, AST）。 
+-  **解析器（Parser）** 遍历标记串，进行语法分析（Syntax Analysis），这里的语法分析分析的是上下文无关的语法（Context Free Grammar），解析器的内部应该是实现了一个有限状态机，用于识别和分析每个语法块格式的正确性，语法分析的结果为一棵抽象语法树（Abstract Syntax Tree, AST）。 
 
--  **类型检查器（Type Checker）** 会遍历抽象语法树，进行语义分析（Semantic Analysis），不过编译器的语意分析是简单的，主要是分析属性语法（Attribute Grammer），比如说变量类型，并适当调整一下语法树。语义分析的结果我们称之为装饰过的抽象语法树（Decorated AST）。 
+-  **类型检查器（Type Checker）** 会遍历抽象语法树，进行语义分析（Semantic Analysis），不过编译器的语义分析是简单的，主要是分析属性语法（Attribute Grammar），比如说变量类型，并适当调整一下语法树。语义分析的结果我们称之为装饰过的抽象语法树（Decorated AST）。 
 
 -  **翻译器（Translator）** 会将抽象语法树翻译成中间表示（Intermediate Representation, IR），IR 的出现解耦了编译器的机器相关（Machine Dependent）部分和机器无关（Machine Independent）部分，上述几个层次在不同架构的机器上面是可以几乎不加改动地复用的。
 
