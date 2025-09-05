@@ -460,7 +460,7 @@ e = d.f;
 
     - EDB：
 
-        - `MathodReturn(m: M, ret: V)`
+        - `MethodReturn(m: M, ret: V)`
 
         - `CallReturn(l: S, r: V)`
 
@@ -469,7 +469,7 @@ e = d.f;
         ```prolog
         VarPointsTo(r, o) <-
             CallGraph(l, m),
-            MathodReturm(m, ret),
+            MethodReturn(m, ret),
             VarPointsTo(ret, o),
             CallReturn(l, r).
         ```
