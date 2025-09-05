@@ -182,7 +182,7 @@ for (i = 0; i < 3; i++) {
 
 <p style="text-align:center"><img src="./content-sensitive.png" alt="content-sensitive" style="zoom:35%;"/></p>
 
-上下文敏感技术一种十分有用的技术，因为它能够大大提高指针分析的精度，将会在后面的章节中详细讨论。
+上下文敏感技术是一种十分有用的技术，因为它能够大大提高指针分析的精度，将会在后面的章节中详细讨论。
 
 在上下文不敏感的分析中，我们会将所有的调用语境汇合在一起，只分析一次方法调用。
 
@@ -266,7 +266,7 @@ z.bar();
 
 ## 6.4 指针分析关心的语句
 
-现代的编程语言又许多典型的语句类型，比如 `if-else` 、 `switch-case` 、 `for/while/do-while` 、 `break/continue` 等等，但是这些语句并不会直接影响程序中各种指针的指向关系，因此在指针分析中，我们会忽略这些语句。我们后续只聚焦于**指针影响型语句（Pointer-affecting Statements）**。
+现代的编程语言有许多典型的语句类型，比如 `if-else` 、 `switch-case` 、 `for/while/do-while` 、 `break/continue` 等等，但是这些语句并不会直接影响程序中各种指针的指向关系，因此在指针分析中，我们会忽略这些语句。我们后续只聚焦于**指针影响型语句（Pointer-affecting Statements）**。
 
 ### 6.4.1 对于各类指针的抽象处理
 

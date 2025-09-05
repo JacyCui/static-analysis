@@ -291,7 +291,7 @@ dest.arr = temp;
 
 看起来简洁了不少。这个例子告诉我们，在手动实现原生代码的时候，可以针对我们要研究的问题进行一些抽象，从而在不影响问题研究的前提下简化实现。
 
-出了人工模拟关键原生代码以外，现在也有研究是通过二进制扫描的方式来识别原生代码中的Java调用。
+除了人工模拟关键原生代码以外，现在也有研究是通过二进制扫描的方式来识别原生代码中的Java调用。
 
 > Identifying Java Calls in Native Code via Binary Scanning (ISSTA 2020) George Fourtounis, Leonidas Triantafyllou, Yannis Smaragdakis,, University of Athens
 

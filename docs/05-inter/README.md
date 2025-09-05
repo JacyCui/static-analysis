@@ -47,7 +47,7 @@ void baz(int x) { }
 
 - 程序优化（Optimization）
 
-- 程序理解（Understanting）
+- 程序理解（Understanding）
 
 - 程序调试（Debugging）
 

@@ -150,7 +150,7 @@ execute(cmd); // critical (trusted)
 答案是有的，比如说下面这个例子。
 
 ```java
-secret = getSectre();
+secret = getSecret();
 if (secret < 0)
     publik = 1;
 else
