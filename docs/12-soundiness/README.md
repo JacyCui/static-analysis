@@ -10,7 +10,7 @@
 
 - 从学术界的角度来讲，几乎所有发表的全程序分析当应用到现实中广泛应用的编程语言以及程序的时候都是不完全（unsound）的。
 
-- 从产业界的角度来说，几乎所有的现实中的全程序静态分析工具（比如说bug检测，安全分析等等）都不得不做出一些不完全（undound）的选择。
+- 从产业界的角度来说，几乎所有的现实中的全程序静态分析工具（比如说bug检测，安全分析等等）都不得不做出一些不完全（unsound）的选择。
 
 那这是为什么呢？这是因为现代的编程语言有一些对于静态分析来说难的语言特性。
 
@@ -48,7 +48,7 @@
 
 - 对于非专家的读者来说，他们可能会错误地认为分析的结果是完全的，并且自信地依赖于分析结果；
 
-- 对于专家来说，没有一个关于如何处理重要且难的语言特性的清晰解释，想要解释分析结果（比如说告诉我们这个分析到底有多完全、多块、多精确）也是很难的。
+- 对于专家来说，没有一个关于如何处理重要且难的语言特性的清晰解释，想要解释分析结果（比如说告诉我们这个分析到底有多完全、多快、多精确）也是很难的。
 
 ### 12.1.2 近似完全性
 
@@ -244,7 +244,7 @@ JNIEXPORT jobject JNICALL Java_JNIExample_guessMe(JNIEnv *env, jobject obj) {
 然后是一段使用原生代码的Java代码。
 
 ```java
-public class JINExample {
+public class JNIExample {
     static { 
         System.loadLibrary("GuessMeLib"); // 载入原生库
     }
@@ -293,7 +293,7 @@ dest.arr = temp;
 
 除了人工模拟关键原生代码以外，现在也有研究是通过二进制扫描的方式来识别原生代码中的Java调用。
 
-> Identifying Java Calls in Native Code via Binary Scanning (ISSTA 2020) George Fourtounis, Leonidas Triantafyllou, Yannis Smaragdakis,, University of Athens
+> Identifying Java Calls in Native Code via Binary Scanning (ISSTA 2020) George Fourtounis, Leonidas Triantafyllou, Yannis Smaragdakis, University of Athens
 
 更多的和近似完全性相关的内容可以参见[soundiness](http://soundiness.org/)主页。
 

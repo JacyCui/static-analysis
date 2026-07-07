@@ -290,7 +290,7 @@ $$n \in CSPointer \subseteq (C\times V)\cup(C\times O\times F)$$
 基于上述定义和结论，我们可以形式化地定义出什么是上下文不敏感分析：
 
 ::: definition 定义8.6
-定义**上下文不敏感（Context InSensitivity）**：
+定义**上下文不敏感（Context Insensitivity）**：
 
 $$
 Select(\_, \_, \_) = []

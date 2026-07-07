@@ -22,7 +22,7 @@
 
 ### 9.1.3 访问控制和信息流安全
 
-::: definition 定义9.1
+::: definition 定义9.2
 **访问控制（Access Control）** 是指对于特定的信息检查请求访问该信息的程序是否具有相应的权限（rights）或者是否得到了相应的许可（permissions）。
 :::
 
@@ -30,7 +30,7 @@
 
 这个时候，如果只有访问控制的话，其实还是会出问题的。我们不妨假设访问控制能够做到绝对的控制，这样的话，访问到敏感信息的一定是一个受信任的主体，我们大概能够认为这个受信任的主体主观上并不希望泄漏信息，但是我们并不能保证它客观上并没有泄漏信息。毕竟，程序总是有可能会有 bug 的。
 
-::: definition 定义9.2
+::: definition 定义9.3
 **信息流安全（Information Flow Security）** 是指通过追踪信息是如何在程序中流动的方式，来确保程序安全地处理了它所获得的信息。
 :::
 
@@ -38,7 +38,7 @@
 
 ### 9.1.4 信息流与安全等级
 
-::: definition 定义9.3
+::: definition 定义9.4
 如果变量 $x$ 中的信息转移到了变量 $y$ 中，则存在 **信息流（Information Flow）** $x \to y$ 。
 :::
 
@@ -69,11 +69,11 @@ broadcast(l); // l is low security
 
 ### 9.1.5 信息流政策
 
-::: definition 定义9.4
+::: definition 定义9.5
 **信息流政策（Information Flow Policy）** 是指对于不同 **安全等级（Security Level）** 之间信息流动的限制。
 :::
 
-::: definition 定义9.5
+::: definition 定义9.6
 **不介入政策（Noninterference Policy）** 是一种信息流政策，它要求高安全等级的变量的信息不应当作用于，或者说不应当干涉低安全等级变量的信息。
 :::
 
@@ -89,7 +89,7 @@ broadcast(l); // l is low security
 
 ### 9.2.1 基本概念
 
-::: definition 定义9.6
+::: definition 定义9.7
 **机密性（Confidentiality）** 指的是阻止机密的信息泄漏， **完整性（Integrity）** 指的是阻止不信任的信息污染受信任的关键信息。
 :::
 
@@ -119,7 +119,7 @@ execute(cmd); // critical (trusted)
 
 ### 9.2.2 广义的完整性
 
-::: definition 定义9.7
+::: definition 定义9.8
 **广义的完整性（Broad Definition of Integrity）** 是指保证数据的正确性（Correctness），完全性（Completeness）以及一致性（Consistency）。
 :::
 
@@ -141,7 +141,7 @@ execute(cmd); // critical (trusted)
 
 ### 9.3.1 信息如何流动
 
-::: definition 定义9.8
+::: definition 定义9.9
 信息可以通过直接拷贝的方式进行流动，这样的信息流称为**显式流（Explicit Flow）**。
 :::
 
@@ -159,13 +159,13 @@ else
 
 这个程序其实是有信息泄漏的，我们可以通过观察 `publik` 的方式推测出 `secret` 是否为负，这样就泄漏了1比特的信息。
 
-::: definition 定义9.9
+::: definition 定义9.10
 信息可以通过影响控制流的方式向外传递，这样的信息流称为**隐式流（Implicit Flow）**。
 :::
 
 ### 9.3.2 隐藏通道
 
-::: definition 定义9.10
+::: definition 定义9.11
 称在计算系统中指示信息的机制为 **信道（Channels）** 。如果这个指示信息的机制的本意并不是信息传递，这样的信道称为 **隐蔽信道（Covert/Hidden Channels）** 。
 :::
 
@@ -248,7 +248,7 @@ else
 
 ### 9.4.1 概念
 
-::: definition 定义9.11
+::: definition 定义9.12
 
 **污点分析（Taint Analysis）** 将程序中的数据分为两类：
 
@@ -318,7 +318,7 @@ else
 |污点数据（Tainted data）|$t_i, t_j \in T \subseteq O$|
 |实例字段（Instance Fields）| $o_i.f, o_j.g \in O\times F$ |
 |指针（Pointers）|$Pointer = V\cup (O\times F)$|
-|指向关系（Point-to Relations）|$pt: Pointer\to P(O)$|
+|指向关系（Points-to Relations）|$pt: Pointer\to P(O)$|
 
 其中， $t_i$ 表示来自分配点 $i$ 的污点数据，其他的记号含义和指针分析一致。
 
@@ -384,7 +384,7 @@ class A {
 }
 ```
 
-污点分析的输入为 $Sources = \{getPassword()\}, Sinks = \{(log(String), 1)\}$ ，污点分析的结果为 $TaintFlows = (3, 7, 1)$ ，即从调用点3产生的污点数据会流到调用点7的水槽方法的第1个参数中去。
+污点分析的输入为 $Sources = \{getPassword()\}, Sinks = \{(log(String), 1)\}$ ，污点分析的结果为 $TaintFlows = {(3, 7, 1)}$ ，即从调用点3产生的污点数据会流到调用点7的水槽方法的第1个参数中去。
 
 分析过程中各个变量和对象的对应关系为：
 

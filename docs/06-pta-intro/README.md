@@ -34,7 +34,7 @@ void foo() {
 
 这是因为，在CHA分析给出的3个目标方法中，有两个是假积极（False Positive，见定义1.5），分析的精度太低了。
 
-而指针分析是基于指向关系（Point-to Relation）的分析，我们发现 `n` 只可能指向 `new One()` ，因此调用点 `n.get()` 的目标方法只有一个—— `One.get()` 。最终 `x` 为常量1，这个结果是精确的。
+而指针分析是基于指向关系（Points-to Relation）的分析，我们发现 `n` 只可能指向 `new One()` ，因此调用点 `n.get()` 的目标方法只有一个—— `One.get()` 。最终 `x` 为常量1，这个结果是精确的。
 
 因此，我们进行指针分析的动机在于追求更高的分析精度。
 
@@ -45,7 +45,7 @@ void foo() {
 <p style="text-align:center"><img src="./pta-process.png" alt="pta-process" style="zoom:30%;"/></p>
 
 ::: definition 定义6.1
-我们将分析一个指针可能指向的 **内存区域（Memory Location）** ，以 **程序（Program）** 为输入，以程序中的 **指向关系（Point-to Relation）** 为输出的分析称作 **指针分析（Pointer Analysis）** 。
+我们将分析一个指针可能指向的 **内存区域（Memory Location）** ，以 **程序（Program）** 为输入，以程序中的 **指向关系（Points-to Relation）** 为输出的分析称作 **指针分析（Pointer Analysis）** 。
 :::
 
 例如：
@@ -180,13 +180,13 @@ for (i = 0; i < 3; i++) {
 
 比如说下图中的 `a.foo(x)` 和 `b.foo(y)` 是两个不同上下文中的调用，因此 `foo` 方法会被分析两次，每次分析都是在对应的上下文里面分析的。
 
-<p style="text-align:center"><img src="./content-sensitive.png" alt="content-sensitive" style="zoom:35%;"/></p>
+<p style="text-align:center"><img src="./context-sensitive.png" alt="context-sensitive" style="zoom:35%;"/></p>
 
 上下文敏感技术是一种十分有用的技术，因为它能够大大提高指针分析的精度，将会在后面的章节中详细讨论。
 
 在上下文不敏感的分析中，我们会将所有的调用语境汇合在一起，只分析一次方法调用。
 
-<p style="text-align:center"><img src="./content-insensitive.png" alt="content-insensitive" style="zoom:35%;"/></p>
+<p style="text-align:center"><img src="./context-insensitive.png" alt="context-insensitive" style="zoom:35%;"/></p>
 
 
 这样实现起来会简单一些，速度也会快一些，但是精度会有所损失。因为数据流汇合的过程中是会损失精度的。
@@ -245,13 +245,13 @@ z.bar();
 
 这段代码的全程序分析结果为：
 
-<p style="text-align:center"><img src="./whole-programe.png" alt="whole-programe" style="zoom:35%;"/></p>
+<p style="text-align:center"><img src="./whole-program.png" alt="whole-program" style="zoom:35%;"/></p>
 
-其中， $o_i$ 表示第 $i$ 行产生的变量。
+其中， $o_i$ 表示第 $i$ 行产生的对象。
 
 假设我们的客户为调用图构建，那么的兴趣点就只有第5行。和第5行相关的指针只有 $z$ ，因此，这段代码的需求驱动分析结果为：
 
-<p style="text-align:center"><img src="./specific-sites.png" alt="wspecific-sites" style="zoom:35%;"/></p>
+<p style="text-align:center"><img src="./specific-sites.png" alt="specific-sites" style="zoom:35%;"/></p>
 
 之后，我们会着眼于全程序分析。
 

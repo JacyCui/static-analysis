@@ -160,7 +160,7 @@ void dispatch() {
 
 - CHA需要知道整个程序的类之间的继承关系，也就是层级结构；
 
-- CHA会根据调用点处的**接收变量（Receiver Variable）** 的 **声明类型（Declare Type）** 来解析虚调用；
+- CHA会根据调用点处的**接收变量（Receiver Variable）** 的 **声明类型（Declared Type）** 来解析虚调用；
 
 - CHA假设声明类型为 `A` 的接收变量 `a` 可能会指向 `A` 类以及 `A` 的所有 **子类（Subclass）** 的对象。
 :::
@@ -330,7 +330,7 @@ static void main() {
     c = a * b;
 }
 
-static int addOne() {
+static int addOne(int x) {
     int y = x + 1;
     return y;
 }

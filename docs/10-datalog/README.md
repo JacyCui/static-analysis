@@ -58,7 +58,7 @@ SELECT * FROM People WHERE Age >= 18;
 
 当然，我们并不能贬低命令式编程，因为使用声明式编程的便捷性是由其他人承受了其背后的苦楚而换来的，追根究底还得是命令式编程，毕竟机器就是机器。
 
-接下来，我们会介绍一种声明式的编程语言Datalog，能够极大地简化指针分析的实现，我们只需要描述规约即可，代码简介且可读性强。
+接下来，我们会介绍一种声明式的编程语言Datalog，能够极大地简化指针分析的实现，我们只需要描述规约即可，代码简洁且可读性强。
 
 最终的代码如下：
 
@@ -146,7 +146,7 @@ $$
 且定义
 
 $$
-P(x_1, x_2, ..., x_n) = True \Leftrightarrow (x_1, x_2, ..., x_m) \in P
+P(x_1, x_2, ..., x_n) = True \Leftrightarrow (x_1, x_2, ..., x_n) \in P
 $$
 
 此时，称为 $(x_1, x_2, ..., x_n)$ 为 $P$ 中的一个 **事实（Fact）** 。
@@ -160,7 +160,7 @@ $$
 
 - `("Xiaoming", 18)` 表示小明 18 岁，是一个事实，所以 `Age("Xiaoming", 18)` 返回值为真；
 
-- `("Abao", 23)` 表示阿宝 23 岁，这不是一个事实，所以 `Age("Alan", 23)` 返回值为假。
+- `("Abao", 23)` 表示阿宝 23 岁，这不是一个事实，所以 `Age("Abao", 23)` 返回值为假。
 
 ::: definition 定义10.4
 在Datalog语言中，称可判定真假的代数表达式为 **代数型原子（Arithmetic Atoms）** 。
@@ -214,11 +214,11 @@ Datalog 会考虑子目标中变量的所有可能的组合，如果存在某个
 
 通常， Datalog 中的谓词有两类： EDB 和 IDB 。
 
-::: definition 定义10.5
+::: definition 定义10.6
 在 Datalog 语言中，称先验定义的谓词为 **外延数据库（Extensional Database， EDB）** ，其中的关系是不可修改的，可视为输入关系。
 :::
 
-::: definition 定义10.6
+::: definition 定义10.7
 在 Datalog 语言中，称由规则建立的谓词为 **内涵数据库（Intensional Database， IDB）** ，其中的关系是由规则推导出来的，可视为输出关系。
 :::
 
@@ -265,7 +265,7 @@ MakeupExamStd(student) <-
 
 ### 10.2.6 递归
 
-其实在结论10.1中，我们已经提到了Datalog支持递归，也就是说Datalog允许一个IDB是直接或者间接从它本身推到出来的。
+其实在结论10.1中，我们已经提到了Datalog支持递归，也就是说Datalog允许一个IDB是直接或者间接从它本身推导出来的。
 
 比如说，我们可以计算通过如下的递归的规则来计算一个图的可达性信息（即传递闭包）：
 
@@ -367,7 +367,7 @@ Datalog 程序总能够终止。
 
 比如说
 -  $VarPointsTo(x, o_i)$ 表示 $o_i \in pt(x)$ ， 
--  $FieldsPointsTo(o_i, f, o_j)$ 表示 $o_j \in pt(o_i.f)$ 。
+-  $FieldPointsTo(o_i, f, o_j)$ 表示 $o_j \in pt(o_i.f)$ 。
 
 例如，对于下面这个程序来说，
 
@@ -557,7 +557,7 @@ VarPointsTo(r, o) <-
 
 |类型|语句|规则|Datalog|
 |:-:|:-:|:-:|:-:|
-|调用|`l: r = x.k(a1, ..., an)`|$l\to m\in CG$<br/>$(m, i) \in Sinks$<br/>$t_j\in pt(a_i)$<br/>$\overline{(j, l, i) \in TaintFlows}$|`TaintFlow(j, l, i) <-`<br/><br/>`CallGraph(l, m),`<br/><br/>`Sink(m, i),`<br/><br/>`Argument(l, i, ai),`<br/><br/>`VarPointsTo(ai, t)`<br/><br/>`Taint(j, t).`|
+|调用|`l: r = x.k(a1, ..., an)`|$l\to m\in CG$<br/>$(m, i) \in Sinks$<br/>$t_j\in pt(a_i)$<br/>$\overline{(j, l, i) \in TaintFlows}$|`TaintFlow(j, l, i) <-`<br/><br/>`CallGraph(l, m),`<br/><br/>`Sink(m, i),`<br/><br/>`Argument(l, i, ai),`<br/><br/>`VarPointsTo(ai, t),`<br/><br/>`Taint(j, t).`|
 
 ## 10.5 基于Datalog的程序分析的优缺点
 
@@ -586,4 +586,3 @@ VarPointsTo(r, o) <-
 2. 如何用 Datalog 来实现指针分析？
 
 3. 如何用 Datalog 来实现污点分析？
-
