@@ -19,7 +19,7 @@ features: # 特点介绍
 <!-- 使用markdown插槽来设置页脚 -->
 
 ::: slot footer
-<span>Copyright © 2023 <a rel="github" href="https://github.com/JacyCui">崔家才</a></span>
+<span>Copyright © 2023 <a rel="github" href="https://www.cuijiacai.com/">崔家才</a></span>
 
 <span>本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。</span>  
 :::
