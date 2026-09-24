@@ -180,7 +180,7 @@ module.exports = {
         editLinks: true,
         editLinkText: '帮助我改善此页面！',
 
-        smoothScroll: true // 页面滚动 
+        smoothScroll: false
     }
 }
 
